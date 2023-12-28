@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#onKeyRelease" prefHeight="470.0" prefWidth="717.0" styleClass="searchSubView" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.swdc.toybox.views.controllers.SearchSubViewController">
+   <center>
+      <ListView id="resultList" fx:id="resultList" onMouseClicked="#onListClicked" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="18.0" />
+         </BorderPane.margin></ListView>
+   </center>
+   <top>
+      <HBox alignment="CENTER_LEFT" prefHeight="61.0" prefWidth="717.0" spacing="8.0" styleClass="filterBar" BorderPane.alignment="TOP_LEFT">
+         <children>
+            <ToggleButton id="filterFolder" mnemonicParsing="false" onAction="#toggleFolderFilter" prefHeight="42.0" prefWidth="42.0" text="ToggleButton" />
+            <ToggleButton id="filterFile" mnemonicParsing="false" onAction="#toggleFileFilter" prefHeight="42.0" prefWidth="42.0" text="ToggleButton" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets left="12.0" />
+         </padding>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </HBox>
+   </top>
+</BorderPane>

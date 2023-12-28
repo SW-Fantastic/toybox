@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="135.0" prefWidth="175.0" styleClass="trayOuther" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.swdc.toybox.views.controllers.TrayViewController">
+   <center>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="115.0" prefWidth="149.0" styleClass="trayPane">
+         <center>
+            <VBox alignment="TOP_CENTER" prefHeight="133.0" prefWidth="170.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#toMainView" prefHeight="28.0" prefWidth="200.0" text="%toybox.tray.mainView" />
+                  <Button layoutX="34.0" layoutY="10.0" mnemonicParsing="false" onAction="#toFoldersView" prefHeight="28.0" prefWidth="200.0" text="%toybox.tray.index-paths" />
+                  <Button layoutX="34.0" layoutY="54.0" mnemonicParsing="false" onAction="#toConfigView" prefHeight="28.0" prefWidth="200.0" text="%toybox.tray.settings" />
+                  <Button id="exit" mnemonicParsing="false" onAction="#exit" prefHeight="28.0" prefWidth="200.0" text="%toybox.tray.exit" />
+               </children>
+            </VBox>
+         </center>
+      </BorderPane>
+   </center>
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+</BorderPane>

@@ -1,0 +1,16 @@
+/assets/extension/**
+/assets/indexer/**
+/assets/indexer/*.*
+/assets/skin/*/*.css
+/data/*.db
+/logs
+/target
+/theme-psds
+
+/extension/target
+/extension/.idea
+
+/toyboxExtensions/*/target
+/toyboxExtensions/*/.idea
+
+*.iml

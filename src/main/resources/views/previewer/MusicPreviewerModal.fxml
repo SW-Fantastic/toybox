@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="161.0" prefWidth="639.0" styleClass="previewer" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.swdc.toybox.views.previews.MusicPreviewController">
+   <center>
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="12.0" styleClass="controls" BorderPane.alignment="CENTER">
+         <children>
+            <Button id="btnPlay" mnemonicParsing="false" onAction="#onPause" prefHeight="64.0" prefWidth="64.0" text="Play" />
+            <Slider fx:id="progress" HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER_LEFT" prefHeight="128.0" prefWidth="141.0" spacing="8.0">
+               <children>
+                  <Button id="vol" minHeight="36.0" minWidth="36.0" mnemonicParsing="false" onAction="#onMute" prefHeight="36.0" prefWidth="36.0" text="vol" />
+                  <Slider fx:id="volume" value="50.0" HBox.hgrow="ALWAYS" />
+               </children>
+               <padding>
+                  <Insets right="24.0" />
+               </padding>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="32.0" />
+         </padding>
+      </HBox>
+   </center>
+   <top>
+      <HBox alignment="BOTTOM_LEFT" prefHeight="61.0" prefWidth="639.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="fileName" styleClass="title" text="Label" />
+         </children>
+         <padding>
+            <Insets bottom="12.0" left="32.0" />
+         </padding>
+      </HBox>
+   </top>
+</BorderPane>

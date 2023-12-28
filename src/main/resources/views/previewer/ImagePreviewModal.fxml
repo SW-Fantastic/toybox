@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="526.0" prefWidth="737.0" styleClass="previewer" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.swdc.toybox.views.previews.ImagePreviewController">
+   <center>
+      <Canvas fx:id="canvas" height="471.0" width="606.0" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>

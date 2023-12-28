@@ -1,0 +1,358 @@
+@import "styles/common.less";
+
+@textPrimary: #4ECEEB;
+@textPrimaryLight:#56b2e1;
+@background: #FFF;
+@borderShadow: #A7C6E2;
+@backgroundHover: #FFF;
+@border: #D1E1F0;
+
+.notification-bar {
+    .pane {
+        -fx-background-color: rgba(0,0,0,0);
+        .dialog-pane {
+            -fx-background-color: @background;
+            -fx-padding: 12;
+            -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+            -fx-background-insets: 0, 1, 2;
+            .label {
+                -fx-font-size: 14px;
+            }
+        }
+    }
+}
+
+.trayOuther {
+    -fx-background-color:rgba(0,0,0,0);
+    .trayPane {
+        -fx-background-color: @background;
+        .trayTitle {
+            -fx-font-size: 16px
+        }
+        .button {
+            -fx-background-color: #FFF;
+            -fx-border-color: @border;
+            -fx-border-width: 0.5 0 0.5 0;
+            -fx-border-style: dashed;
+            &:hover {
+                -fx-background-color:@textPrimaryLight;
+                -fx-text-fill: #FFF;
+            }
+        }
+        -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+    }
+}
+
+.previewer {
+    -fx-background-color: @background;
+    .title {
+        -fx-font-size: 18px;
+    }
+    .controls {
+        -fx-background-color: #FFF;
+        .button {
+            -fx-background-color: rgba(0,0,0,0);
+            -fx-text-fill: @textPrimary;
+            &:hover {
+                -fx-text-fill:@textPrimaryLight;
+                -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+            }
+        }
+        .slider {
+            .thumb{
+                -fx-background-color:@textPrimaryLight;
+            }
+            .track {
+                -fx-background-color:@background;
+                -fx-border-radius: 99;
+                -fx-border-width: 0.4px;
+                -fx-border-color:@border;
+                -fx-effect:dropshadow(three-pass-box, @borderShadow,6,0,0,0);
+            }
+        }
+    }
+    .text-area {
+        -fx-background-color: rgba(0,0,0,0);
+        -fx-font-size:16;
+        -fx-text-fill:@textPrimary;
+        .scroll-pane {
+            -fx-background-color: @background;
+            .content {
+                -fx-background-color:@background;
+            }
+        }
+    }
+
+    .split-pane {
+        -fx-background-color: rgba(0,0,0,0);
+        .split-pane-divider {
+            -fx-background-color: @border;
+        }
+    }
+
+    .list-view,.tree-view {
+
+        -fx-border-color: @border;
+        -fx-border-width: 1;
+        -fx-border-style: solid;
+
+        -fx-background-color: @background;
+        -fx-font-size: 14;
+
+        .list-cell,.tree-cell {
+            -fx-background-color: @background;
+            &:filled {
+                &:hover {
+                    -fx-background-color: @border;
+                    -fx-text-fill: @textPrimary;
+                }
+                &:selected {
+                    -fx-text-background-color: #FFF;
+                    -fx-background-color: @textPrimaryLight;
+                    -fx-text-fill: #FFF;
+                }
+            }
+        }
+
+    }
+}
+
+.settingView {
+
+    -fx-background-image: url(./dialogBg.png);
+    -fx-background-size: cover;
+
+    .settingList {
+
+        -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+        -fx-background-color: #FFF;
+
+        .list-cell {
+            -fx-background-color: #FFF;
+            &:filled {
+                &:hover {
+                    -fx-background-color: @border;
+                    -fx-text-fill: @textPrimary;
+                }
+                &:selected {
+                    -fx-text-background-color: #FFF;
+                    -fx-background-color: @textPrimaryLight;
+                    -fx-text-fill: #FFF;
+                }
+            }
+        }
+    }
+
+    .button {
+
+        -fx-background-color: @textPrimary;
+        -fx-text-fill: #FFF;
+
+        &:hover {
+            -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 3, 0.0, 0, 2);
+            -fx-background-color: @textPrimaryLight;
+        }
+
+    }
+
+    .prop-sheet {
+        -fx-background: rgba(255,255,255,0.2);
+        -fx-background-radius: 8;
+
+        .label{
+            -fx-font-size: 14;
+        }
+        .text-field {
+            -fx-font-size: 14;
+            -fx-background-color: #FFF;
+            -fx-border-radius: 6;
+            -fx-text-filled: @textPrimary;
+            -fx-effect: dropshadow(three-pass-box, @textPrimary, 6, 0, 0, 0);
+        }
+        .combo-box {
+            .comb-custom(#FFF,@textPrimary,@textPrimaryLight)
+        }
+        .check-box {
+            -fx-background-color: rgba(0,0,0,0);
+            -fx-padding: 4 0 4 0;
+            .box {
+                -fx-background-color:#FFF;
+                -fx-effect: dropshadow(three-pass-box, @textPrimary, 6, 0, 0, 0);
+                &:selected .mark  {
+                    -fx-background-color:@textPrimaryLight;
+                }
+            }
+        }
+    }
+
+}
+
+.dialogView {
+
+    -fx-background-image: url(./dialogBg.png);
+    -fx-background-size: cover;
+
+    .button {
+        -fx-background-color: @textPrimary;
+        -fx-text-fill: #FFF;
+        &:hover {
+            -fx-background-color: @textPrimaryLight;
+            -fx-text-fill: #FFF;
+        }
+    }
+
+    .table-view {
+        -fx-background-color: @background;
+        -fx-background-radius: 8px;
+        .column-header-background {
+            -fx-background-color:  rgba(255,255,255,0);
+            .filler {
+                -fx-background-color:@border;
+                -fx-background-radius: 8;
+            }
+        }
+        .column-header {
+            -fx-background-color:@border;
+            -fx-background-radius: 8;
+            .label {
+              -fx-effect:dropshadow(three-pass-box,#FFF,12,0,0,0);
+              -fx-text-fill: @textPrimary;
+            }
+        }
+        .table-row-cell{
+            -fx-table-cell-border-color:rgba(0,0,0,0);
+            -fx-background-color: rgba(0,0,0,0);
+            .cell {
+                -fx-alignment: center-left;
+            }
+            &:filled {
+                -fx-border-width: 0 0 1px 0;
+                -fx-border-style: solid;
+                -fx-border-color: @border;
+                &:hover {
+                    -fx-background-radius: 8;
+                    -fx-background-color: @backgroundHover;
+                }
+                &:selected {
+                    -fx-background-radius: 8;
+                    -fx-background-color: @textPrimaryLight;
+                    -fx-fill: #FFF;
+                }
+            }
+        }
+    }
+
+}
+
+.searchView {
+
+    -fx-background-color:rgba(0,0,0,0);
+
+    .searchField {
+        -fx-font-size: 24px;
+        -fx-background-color: rgba(255,215,242,0);
+        -fx-border-color:rgba(255,255,255,0);
+        -fx-prompt-text-fill: #FFF;
+        .menu-item {
+            -fx-font-size: 14px;
+        }
+    }
+
+    .searchSubView {
+
+        -fx-background-image: url(./search.png);
+        -fx-background-size: cover;
+        -fx-background-radius: 8px;
+        -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+
+        .filterBar {
+            -fx-background-radius: 8px 8px 0 0;
+            .toggle-button {
+                -fx-text-fill: @textPrimary;
+                -fx-background-color: @background;
+                -fx-background-radius: 8px;
+                &:hover,&:selected {
+                    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+                }
+            }
+        }
+
+        .list-view {
+            -fx-background-color: rgba(0,0,0,0);
+            .list-cell:empty {
+                -fx-background-color: rgba(0,0,0,0);
+            }
+            .list-cell:filled {
+
+                -fx-border-width: 0 0 1px 0;
+                -fx-border-style: solid;
+                -fx-border-color: linear-gradient(to right, @border,rgba(0,0,0,0));;
+                -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+
+                -fx-background-color: rgba(0,0,0,0);
+                &:hover {
+                    -fx-background-color: linear-gradient(to right,#FFF 60%, rgba(0,0,0,0) 80%, #FFF 100%);
+                    .button {
+                        -fx-background-color: rgba(0,0,0,0);
+                        -fx-text-fill: @textPrimaryLight;
+                        &:hover {
+                            -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+                        }
+                    }
+                }
+                &:selected {
+                    -fx-text-fill:#FFF;
+                    -fx-text-background-color: #FFF;
+                    -fx-background-color: linear-gradient(to right,@textPrimaryLight 60%, rgba(0,0,0,0) 80%, @textPrimaryLight 100%);
+                    .button {
+                        -fx-background-color: @textPrimary;
+                        -fx-text-fill: #FFF;
+                        &:hover {
+                            -fx-effect: dropshadow(three-pass-box, #FFF, 11, 0.0, 0, 3);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .searchOutherPane {
+        -fx-background-image: url(./searchBg.png);
+        -fx-background-size: cover;
+    }
+
+    .searchPane {
+
+        -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+
+        .buttonOpts {
+            -fx-background-color: rgba(0,0,0,0);
+            -fx-text-fill: @textPrimary;
+            &:hover,&:selected {
+                -fx-text-fill: @textPrimaryLight;
+                -fx-background-color: @background;
+                -fx-background-radius: 8px;
+                -fx-effect: dropshadow(three-pass-box, #999, 11, 0.0, 0, 1);
+            }
+        }
+    }
+}
+
+.extensionView {
+
+    -fx-background-image: url(./dialogBg.png);
+    -fx-background-size: cover;
+
+    .grid-view {
+        .grid-cell {
+            -fx-background-color:rgba(255,255,255,0.6);
+            -fx-text-fill: @textPrimary;
+            -fx-font-size: 14;
+            &:hover {
+                -fx-background-color: #FFF;
+                -fx-effect: dropshadow(three-pass-box, #999, 11, 0.0, 0, 1);
+            }
+        }
+    }
+
+}

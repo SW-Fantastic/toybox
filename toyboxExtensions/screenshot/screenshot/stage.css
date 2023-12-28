@@ -1,0 +1,58 @@
+.screenshot-toolbar {
+
+    -fx-background-color: #FFF;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 1);
+
+}
+
+.screenshot-toolbar .button,
+.screenshot-toolbar .toggle-button {
+
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-background-radius: 8;
+    -fx-text-fill: #7DD48B;
+
+}
+
+.screenshot-toolbar .button:hover,
+.screenshot-toolbar .toggle-button:hover,
+.screenshot-toolbar .toggle-button:selected {
+
+    -fx-background-color: #7DD48B;
+    -fx-background-radius: 8;
+    -fx-text-fill:#FFF;
+
+}
+
+.screenshot-toolbar .combo-box, .screenshot-toolbar .color-picker {
+
+    -fx-background-color: #FFF;
+    -fx-text-fill: #7DD48B;
+    -fx-border-color: #7DD48B;
+    -fx-border-style: solid;
+    -fx-border-width: 1;
+
+}
+.screenshot-toolbar .combo-box .combo-box-popup .list-view .list-cell:filled {
+
+    -fx-background-color: #FFF;
+
+}
+.screenshot-toolbar .combo-box .combo-box-popup .list-view .list-cell:filled:hover {
+
+    -fx-background-color: #79D2A3;
+    -fx-text-fill: #FFF;
+
+}
+.screenshot-toolbar .combo-box .combo-box-popup .list-view .list-cell:filled:selected {
+
+    -fx-background-color: #7DD48B;
+    -fx-text-fill: #FFF;
+
+}
+
+.text-area .scroll-bar {
+
+    -fx-font-size: 12;
+
+}
