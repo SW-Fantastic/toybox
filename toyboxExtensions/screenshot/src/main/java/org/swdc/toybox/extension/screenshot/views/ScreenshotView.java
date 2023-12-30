@@ -32,6 +32,7 @@ import org.swdc.fx.view.AbstractSwingView;
 import org.swdc.fx.view.View;
 import org.swdc.toybox.extension.ExtensionHelper;
 import org.swdc.toybox.extension.screenshot.ScreenShotExtension;
+import org.swdc.toybox.extension.screenshot.views.drawables.ArrowDrawable;
 import org.swdc.toybox.extension.screenshot.views.drawables.LineDrawable;
 import org.swdc.toybox.extension.screenshot.views.drawables.RectDrawable;
 import org.swdc.toybox.extension.screenshot.views.drawables.TextDrawable;
@@ -98,6 +99,7 @@ public class ScreenshotView extends AbstractSwingView {
         setupDrawableTool(findById("text"),"i-cursor", TextDrawable::new);
         setupDrawableTool(findById("line"),"pencil-alt", LineDrawable::new);
         setupDrawableTool(findById("rect"),"vector-square", RectDrawable::new);
+        setupDrawableTool(findById("arrow"),"arrow-left", ArrowDrawable::new);
 
         setupButton(findById("save"),"save");
 
