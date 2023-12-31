@@ -18,6 +18,7 @@
             <ToggleButton id="text" minHeight="36.0" minWidth="36.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="ToggleButton" />
             <ToggleButton id="line" minHeight="36.0" minWidth="36.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="ToggleButton" />
             <ToggleButton id="rect" minHeight="36.0" minWidth="36.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="ToggleButton" />
+            <ToggleButton id="arrow" minHeight="36.0" minWidth="36.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" text="ToggleButton" />
             <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
             <Button id="save" minHeight="36.0" minWidth="36.0" mnemonicParsing="false" onAction="#saveImage" prefHeight="36.0" prefWidth="36.0" text="Button" />
          </children>
