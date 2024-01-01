@@ -10,7 +10,7 @@
    <center>
       <ListView id="resultList" fx:id="resultList" onMouseClicked="#onListClicked" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets bottom="18.0" />
+            <Insets bottom="8.0" left="24.0" right="48.0" />
          </BorderPane.margin></ListView>
    </center>
    <top>

@@ -53,4 +53,7 @@
          </padding>
       </VBox>
    </top>
+   <bottom>
+      <HBox prefHeight="66.0" prefWidth="839.0" BorderPane.alignment="CENTER" />
+   </bottom>
 </BorderPane>

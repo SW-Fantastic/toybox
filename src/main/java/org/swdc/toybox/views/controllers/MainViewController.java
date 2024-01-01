@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import org.swdc.dependency.annotations.EventListener;
 import org.swdc.fx.FXResources;
 import org.swdc.fx.view.ViewController;
@@ -87,7 +88,13 @@ public class MainViewController extends ViewController<MainView> {
         MainView mainView = getView();
         BorderPane mainViewPane = (BorderPane)mainView.getView();
         BorderPane searchView = (BorderPane) searchSubView.getView();
-        searchView.prefHeightProperty().bind(mainViewPane.heightProperty().subtract(240));
+        VBox searchArea = (VBox) mainViewPane.getTop();
+        searchView.prefHeightProperty().bind(
+                mainViewPane
+                .heightProperty()
+                .subtract(searchArea.heightProperty())
+                .subtract(80)
+        );
         searchView.prefWidthProperty().bind(mainViewPane.widthProperty().subtract(12));
 
     }

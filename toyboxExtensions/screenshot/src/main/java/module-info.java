@@ -30,5 +30,7 @@ module toybox.screenshot {
             javafx.fxml,
             swdc.application.dependency,
             swdc.application.fx;
+
+    opens screenshot.lang;
     opens org.swdc.toybox.extension.screenshot.views.drawables to javafx.controls, javafx.fxml, swdc.application.configs, swdc.application.dependency, swdc.application.fx;
 }

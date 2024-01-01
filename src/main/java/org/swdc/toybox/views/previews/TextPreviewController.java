@@ -58,6 +58,8 @@ public class TextPreviewController extends ViewController<TextPreviewModal> {
             getView().show();
         } catch (Exception e) {
             logger.error("failed to load text : ",e);
+            Alert alert = getView().alert("失败","无法打开此文件，文件可能已经损坏。", Alert.AlertType.ERROR);
+            alert.showAndWait();
         }
     }
 

@@ -81,6 +81,12 @@ public class NativeKeyTrigger implements NativeKeyListener {
 
     @Override
     public void nativeKeyPressed(NativeKeyEvent nativeEvent) {
+        pressedChain.addFirst(nativeEvent.getKeyCode());
+    }
+
+    @Override
+    public void nativeKeyReleased(NativeKeyEvent nativeEvent) {
+
         int code = NativeKeyUtils.stringToKeyCode(config.getSearchKey())[0];
         if (nativeEvent.getKeyCode() == code) {
             if (mainTriggered) {
@@ -101,11 +107,7 @@ public class NativeKeyTrigger implements NativeKeyListener {
         } else {
             mainTriggered = false;
         }
-        pressedChain.addFirst(nativeEvent.getKeyCode());
-    }
 
-    @Override
-    public void nativeKeyReleased(NativeKeyEvent nativeEvent) {
         int[] codes = pressedChain.stream()
                 .mapToInt(i -> i).toArray();
         pressedChain.clear();
