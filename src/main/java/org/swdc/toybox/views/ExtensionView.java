@@ -36,6 +36,8 @@ public class ExtensionView extends AbstractView {
         );
         extensionsView.setCellHeight(82);
         extensionsView.setCellWidth(82);
+        extensionsView.setHorizontalCellSpacing(6);
+        extensionsView.setVerticalCellSpacing(6);
         pane.setCenter(extensionsView);
 
     }

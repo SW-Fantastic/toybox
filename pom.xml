@@ -64,7 +64,6 @@
             <artifactId>jnativehook</artifactId>
             <version>2.2.2</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/net.contentobjects.jnotify/jnotify -->
         <dependency>
             <groupId>net.contentobjects</groupId>
             <artifactId>jnotify</artifactId>
