@@ -20,6 +20,34 @@
             <artifactId>ext</artifactId>
             <version>1.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.dizitart/nitrite -->
+        <dependency>
+            <groupId>org.dizitart</groupId>
+            <artifactId>nitrite</artifactId>
+            <version>3.4.4</version>
+        </dependency>
+        <dependency>
+            <groupId>net.contentobjects</groupId>
+            <artifactId>jnotify</artifactId>
+            <version>0.95.1</version>
+        </dependency>
+        <!-- Dependencies By Nitrite Begin -->
+        <dependency>
+            <groupId>uk.co.jemos.podam</groupId>
+            <artifactId>podam</artifactId>
+            <version>7.2.3.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2-mvstore</artifactId>
+            <version>1.4.200</version>
+        </dependency>
+        <!-- Dependencies By Nitrite End -->
     </dependencies>
 
     <build>

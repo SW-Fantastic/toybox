@@ -25,6 +25,10 @@ public interface Extension {
 
     }
 
+    default void active() {
+
+    }
+
     default boolean activeWithMenu() {
         return false;
     }

@@ -17,6 +17,7 @@ import org.swdc.toybox.core.EMFProviderImpl;
 import org.swdc.toybox.core.NativeKeyTrigger;
 import org.swdc.toybox.core.NativeKeyUtils;
 import org.swdc.toybox.core.ext.BoxExtensionContext;
+import org.swdc.toybox.extension.Extension;
 import org.swdc.toybox.views.ExtensionView;
 import org.swdc.toybox.views.MainView;
 import org.swdc.toybox.views.TrayView;
@@ -117,6 +118,11 @@ public class ToyBoxApplication extends FXApplication {
                     }
                 })
         );
+
+        BoxExtensionContext extensionContext = context.getByClass(BoxExtensionContext.class);
+        for (Extension extension: extensionContext.getExtensions()) {
+            extension.active();
+        }
 
         ResourceBundle bundle = resources.getResourceBundle();
         MainView mainView = dependencyContext.getByClass(MainView.class);

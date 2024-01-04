@@ -7,17 +7,16 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.swdc.toybox.extension.fsmapper.views.ExtensionConfViewController">
    <center>
       <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="conf-mapper" BorderPane.alignment="CENTER">
          <top>
-            <HBox alignment="CENTER_RIGHT" prefHeight="52.0" prefWidth="584.0" spacing="8.0" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER_RIGHT" prefHeight="52.0" prefWidth="584.0" spacing="8.0" styleClass="toolbar" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                </BorderPane.margin>
                <children>
-                  <Button id="add" minHeight="34.0" minWidth="34.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="34.0" text="Button" />
+                  <Button id="add" minHeight="34.0" minWidth="34.0" mnemonicParsing="false" onAction="#addFolder" prefHeight="34.0" prefWidth="34.0" text="Button" />
                </children>
                <padding>
                   <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
@@ -25,10 +24,11 @@
             </HBox>
          </top>
          <center>
-            <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                  <TableColumn fx:id="colVisible" maxWidth="48.0" minWidth="48.0" prefWidth="48.0" resizable="false" />
+                <TableColumn fx:id="colPath" prefWidth="455.0" text="%toybox.ext.folder-mapping.folder-path" />
+                <TableColumn fx:id="colControl" maxWidth="80.0" prefWidth="75.0" text="%toybox.ext.folder-mapping.operation" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

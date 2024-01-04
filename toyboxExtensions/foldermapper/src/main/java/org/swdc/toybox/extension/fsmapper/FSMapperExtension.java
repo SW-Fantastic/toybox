@@ -8,11 +8,15 @@ import org.swdc.fx.MultipleSourceResourceBundle;
 import org.swdc.fx.config.ApplicationConfig;
 import org.swdc.toybox.extension.Extension;
 import org.swdc.toybox.extension.NamedConfigure;
+import org.swdc.toybox.extension.fsmapper.entity.MappedFile;
+import org.swdc.toybox.extension.fsmapper.entity.MappedFolderService;
 import org.swdc.toybox.extension.fsmapper.views.ExtensionConfView;
+import org.swdc.toybox.extension.fsmapper.views.FolderMapView;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -66,12 +70,12 @@ public class FSMapperExtension implements Extension {
         }
         FXResources resources = context.getByClass(FXResources.class);
         MultipleSourceResourceBundle resourceBundle = resources.getResourceBundle();
-        return resourceBundle.getString("toybox.ext.folder-mapping.name");
+        return resourceBundle.getString(LangConstants.EXT_NAME);
     }
 
     @Override
     public String extensionPackageName() {
-        return "folders-mapper";
+        return "folder-mapper";
     }
 
     @Override
@@ -113,9 +117,18 @@ public class FSMapperExtension implements Extension {
             logger.error("failed to load image icon",e);
         }
 
+    }
+
+    @Override
+    public void active() {
         FSMapperConfigure configure = context.getByClass(FSMapperConfigure.class);
         if(configure.getEnable()) {
-
+            MappedFolderService service = context.getByClass(MappedFolderService.class);
+            List<MappedFile> folders = service.getAllFolders();
+            for (MappedFile folder : folders) {
+                FolderMapView view = context.getByClass(FolderMapView.class);
+                view.showMapping(folder);
+            }
         }
     }
 

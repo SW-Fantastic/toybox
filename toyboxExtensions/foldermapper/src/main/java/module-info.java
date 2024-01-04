@@ -15,14 +15,23 @@ module toybox.foldermapper {
     requires jakarta.inject;
     requires jakarta.annotation;
 
+    requires nitrite;
+    requires jnotify;
+
     provides org.swdc.toybox.extension.Extension with org.swdc.toybox.extension.fsmapper.FSMapperExtension;
 
-    exports org.swdc.toybox.extension.fsmapper;
 
     opens org.swdc.toybox.extension.fsmapper to
             swdc.application.configs,
             swdc.application.dependency,
             swdc.application.fx;
+
+    opens org.swdc.toybox.extension.fsmapper.entity to
+            nitrite,
+            com.fasterxml.jackson.core,
+            com.fasterxml.jackson.databind,
+            swdc.application.fx,
+            swdc.application.dependency;
 
     opens org.swdc.toybox.extension.fsmapper.views to
             javafx.fxml,
@@ -37,6 +46,9 @@ module toybox.foldermapper {
             javafx.fxml,
             swdc.application.dependency,
             swdc.application.fx;
+
+    exports org.swdc.toybox.extension.fsmapper;
+    exports org.swdc.toybox.extension.fsmapper.entity;
 
     opens foldermapper.lang;
 

@@ -1,0 +1,162 @@
+package org.swdc.toybox.extension.fsmapper.entity;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.inject.Inject;
+import org.dizitart.no2.IndexOptions;
+import org.dizitart.no2.IndexType;
+import org.dizitart.no2.Nitrite;
+import org.dizitart.no2.objects.Cursor;
+import org.dizitart.no2.objects.ObjectRepository;
+import org.dizitart.no2.objects.filters.ObjectFilters;
+import org.swdc.dependency.EventEmitter;
+import org.swdc.dependency.event.AbstractEvent;
+import org.swdc.dependency.event.Events;
+import org.swdc.fx.FXResources;
+import org.swdc.toybox.extension.ExtensionHelper;
+import org.swdc.toybox.extension.fsmapper.FSMapperExtension;
+
+import java.awt.*;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
+
+public class MappedFolderService implements EventEmitter {
+
+    private Nitrite documentDB;
+
+    private ObjectRepository<MappedFile> mappedFileRepo;
+
+    private Events events;
+
+    @Inject
+    private FXResources resources;
+
+
+    @PostConstruct
+    public void initDataSource() {
+
+        documentDB = Nitrite.builder()
+                .compressed()
+                .filePath(
+                        resources.getAssetsFolder()
+                                .getAbsolutePath()
+                                + "/extension/folder-mapper/mapped.db"
+                )
+                .openOrCreate();
+
+        mappedFileRepo = documentDB.getRepository(MappedFile.class);
+        if (!mappedFileRepo.hasIndex("id")) {
+            mappedFileRepo.createIndex("id", IndexOptions.indexOptions(IndexType.Unique));
+        }
+        if (!mappedFileRepo.hasIndex("path")) {
+            mappedFileRepo.createIndex("path", IndexOptions.indexOptions(IndexType.Unique));
+        }
+    }
+
+    public void remove(File theFile) {
+        if (theFile == null) {
+            return;
+        }
+        Path path = theFile.toPath().toAbsolutePath().normalize();
+        mappedFileRepo.remove(ObjectFilters.eq("path",path));
+        documentDB.commit();
+        documentDB.compact();
+    }
+
+    public MappedFile update(MappedFile theFile) {
+        if (theFile == null || theFile.getId() == null || theFile.getId().isBlank()) {
+            return null;
+        }
+        mappedFileRepo.update(theFile);
+        this.emit(new FileUpdateEvent(theFile));
+        return theFile;
+    }
+
+    public MappedFile getByPath(String absolutePath) {
+        if (absolutePath == null || absolutePath.isBlank()) {
+            return null;
+        }
+        Cursor<MappedFile> cursor = mappedFileRepo.find(
+                ObjectFilters.eq("path",absolutePath)
+        );
+        if (cursor == null || cursor.size() == 0) {
+            return null;
+        }
+        return cursor.firstOrDefault();
+    }
+
+    public MappedFile add(File theFile) {
+        if (theFile == null) {
+            return null;
+        }
+        Path path = theFile.toPath().toAbsolutePath().normalize();
+        if (!Files.exists(path) || !Files.isDirectory(path)) {
+            return null;
+        }
+
+        Cursor<MappedFile> files = mappedFileRepo.find(
+                ObjectFilters.eq(
+                        "path",
+                        path.toString()
+                )
+        );
+        if (files == null || files.size() == 0) {
+            GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice device = environment.getDefaultScreenDevice();
+            GraphicsConfiguration configuration = device.getDefaultConfiguration();
+
+            MappedFile file = new MappedFile();
+            file.setId(UUID.randomUUID().toString());
+            file.setPath(path.toString());
+
+            file.setPosX(
+                    configuration.getBounds()
+                            .getCenterX() / configuration
+                            .getDefaultTransform()
+                            .getScaleX()
+            );
+
+            file.setPosY(
+                    configuration.getBounds()
+                            .getCenterY() / configuration
+                            .getDefaultTransform()
+                            .getScaleY()
+            );
+
+            file.setWidth(344.0);
+            file.setHeight(361.0);
+            file.setVisible(true);
+
+            mappedFileRepo.insert(file);
+            return file;
+        }
+        return files.firstOrDefault();
+    }
+
+    public List<MappedFile> getAllFolders() {
+        return mappedFileRepo.find()
+                .toList();
+    }
+
+    @PreDestroy
+    public void destroy() {
+        if (documentDB != null) {
+            documentDB.commit();
+            documentDB.close();
+            documentDB = null;
+        }
+    }
+
+    @Override
+    public <T extends AbstractEvent> void emit(T t) {
+        this.events.dispatch(t);
+    }
+
+    @Override
+    public void setEvents(Events events) {
+        this.events = events;
+    }
+}

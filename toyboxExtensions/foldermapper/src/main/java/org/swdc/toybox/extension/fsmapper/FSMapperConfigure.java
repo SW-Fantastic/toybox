@@ -15,8 +15,8 @@ import org.swdc.toybox.extension.NamedConfigure;
 public class FSMapperConfigure extends NamedConfigure {
 
     @PropEditor(
-            name = "%toybox.ext.folder-mapping.name",
-            description = "%toybox.ext.folder-mapping.conf-desc",
+            name = "%" + LangConstants.EXT_NAME,
+            description = "%" + LangConstants.EXT_CONF_DESC,
             editor = CheckEditor.class
     )
     @Property("folder-mapper-enable")
@@ -32,6 +32,6 @@ public class FSMapperConfigure extends NamedConfigure {
 
     @Override
     public String configName() {
-        return "%toybox.ext.folder-mapping.conf-name";
+        return "%" + LangConstants.EXT_CONF_NAME;
     }
 }
