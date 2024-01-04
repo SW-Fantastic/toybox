@@ -33,6 +33,8 @@ import org.swdc.toybox.extension.fsmapper.entity.MappedFolderService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.nio.file.Path;
@@ -333,12 +335,20 @@ public class FolderMapView extends AbstractSwingView {
                 Path name = Path.of(path).getFileName();
                 folderName.setText(name.toString());
                 refreshView(this.path);
-                frame.toBack();
                 this.show();
             });
         } catch (Exception e) {
             logger.error("failed to open view.",e);
         }
+    }
+
+    @Override
+    public void show() {
+        JFrame frame = getStage();
+        if (frame.isShowing()) {
+            return;
+        }
+        frame.setVisible(true);
     }
 
     public void refreshView(String path) {
