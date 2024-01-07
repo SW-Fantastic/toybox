@@ -28,7 +28,7 @@
                         <Insets right="4.0" />
                      </padding>
                      <children>
-                        <Button minHeight="24.0" minWidth="24.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="24.0" text="REF" />
+                        <Button id="ref" minHeight="24.0" minWidth="24.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="24.0" text="REF" />
                      </children>
                   </HBox>
                </children>

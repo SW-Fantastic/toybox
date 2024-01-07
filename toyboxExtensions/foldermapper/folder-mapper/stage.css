@@ -86,3 +86,13 @@
 .mapper-view .list-view .list-cell:selected{
     -fx-background-color: #FFF;
 }
+.mapper-view .list-view .scroll-bar {
+    -fx-font-size: 8;
+    -fx-background-color: rgba(255,255,255,0.2);
+}
+.mapper-view .list-view .scroll-bar .track {
+    -fx-background-color: rgba(255,255,255,0.2);
+}
+.mapper-view .list-view .scroll-bar .thumb {
+    -fx-background-color: #FFF;
+}

@@ -8,17 +8,21 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
-import javafx.scene.control.ButtonBase;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.swdc.dependency.annotations.EventListener;
+import org.swdc.fx.FXResources;
 import org.swdc.fx.config.ApplicationConfig;
 import org.swdc.fx.font.FontSize;
 import org.swdc.fx.font.Fontawsome5Service;
@@ -26,6 +30,7 @@ import org.swdc.fx.view.AbstractSwingView;
 import org.swdc.fx.view.View;
 import org.swdc.toybox.extension.ExtensionHelper;
 import org.swdc.toybox.extension.fsmapper.FSMapperExtension;
+import org.swdc.toybox.extension.fsmapper.LangConstants;
 import org.swdc.toybox.extension.fsmapper.NativeFSListener;
 import org.swdc.toybox.extension.fsmapper.entity.FileUpdateEvent;
 import org.swdc.toybox.extension.fsmapper.entity.MappedFile;
@@ -37,9 +42,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import java.io.File;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @View(
         viewLocation = "foldermapper/view/FolderMapperView.fxml",
@@ -79,6 +88,11 @@ public class FolderMapView extends AbstractSwingView {
     @Named("applicationConfig")
     private ApplicationConfig config;
 
+    @Inject
+    private FXResources resources;
+
+    private ContextMenu contextMenu;
+
     private boolean locked;
 
     private Logger logger = LoggerFactory.getLogger(
@@ -100,6 +114,51 @@ public class FolderMapView extends AbstractSwingView {
         fileListView.setOnMouseMoved(this::onMouseMoved);
         fileListView.setOnMousePressed(this::resizePressed);
         fileListView.setOnMouseDragged(this::resizeDragged);
+        fileListView.setOnMouseClicked( e -> {
+            if (e.getClickCount() < 2) {
+                return;
+            }
+            File target = fileListView.getSelectionModel().getSelectedItem();
+            if (target == null || !target.exists()) {
+                return;
+            }
+            try {
+                Desktop.getDesktop().open(target);
+            } catch (Exception ex) {
+                logger.error("failed to open file", ex);
+            }
+        });
+        fileListView.setOnDragOver(e -> {
+            e.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+        });
+        fileListView.setOnDragDropped(e -> {
+            Dragboard dragboard = e.getDragboard();
+            List<File> files = dragboard.getFiles();
+            for (File file : files) {
+                Thread.ofVirtual().start(() -> {
+                    try {
+                        Files.copy(file.toPath(), Paths.get(this.path).resolve(file.getName()));
+                        logger.info("file was copied from : " + file.toPath().toAbsolutePath() + " to " + path);
+                    } catch (FileAlreadyExistsException ex) {
+                        Platform.runLater(() -> {
+                            ResourceBundle bundle = resources.getResourceBundle();
+                            Alert alert = alert(
+                                    bundle.getString(LangConstants.EXT_ERROR),
+                                    bundle.getString(LangConstants.EXT_ALREADY_EXIST) + ":" + file.getName(),
+                                    Alert.AlertType.ERROR
+                            );
+                            alert.showAndWait();
+                        });
+
+                    } catch (Exception ex) {
+                        logger.error("failed to copy file : " + file.toPath().toAbsolutePath(),ex);
+                    }
+                });
+            }
+        });
+
+        createContextMenu();
+        fileListView.setContextMenu(contextMenu);
 
         ToggleButton lock = findById("lock");
         lock.selectedProperty().addListener(v -> {
@@ -111,6 +170,12 @@ public class FolderMapView extends AbstractSwingView {
             setupIcon(lock,lock.isSelected() ? "lock" : "lock-open");
             this.locked = lock.isSelected();
         });
+
+        Button refresh = findById("ref");
+        refresh.setOnAction(e -> {
+            refreshView();
+        });
+        setupIcon(refresh,"redo");
 
         // Apply Theme
         String basePath = helper.getAssetFolder(FSMapperExtension.class).getAbsolutePath();
@@ -297,7 +362,7 @@ public class FolderMapView extends AbstractSwingView {
         MappedFile mappedFolder = event.getMessage();
         if (mappedFolder.getPath().equals(path)) {
             frame.setVisible(mappedFolder.isVisible());
-            refreshView(path);
+            refreshView();
         }
     }
 
@@ -305,7 +370,7 @@ public class FolderMapView extends AbstractSwingView {
         try {
             listener = new NativeFSListener(
                     file.getPath(),
-                    this::refreshView
+                    (e)->this.refreshView()
             );
             Platform.runLater(() -> {
                 this.path = file.getPath();
@@ -326,6 +391,8 @@ public class FolderMapView extends AbstractSwingView {
                         file.getHeight().intValue()
                 );
 
+                frame.setFocusableWindowState(false);
+
                 ToggleButton lock = findById("lock");
                 lock.setSelected(file.isLocked());
                 setupIcon(lock,file.isLocked() ? "lock" : "lock-open");
@@ -334,8 +401,10 @@ public class FolderMapView extends AbstractSwingView {
                 Label folderName = findById("lblName");
                 Path name = Path.of(path).getFileName();
                 folderName.setText(name.toString());
-                refreshView(this.path);
-                this.show();
+                refreshView();
+                if (file.isVisible()) {
+                    this.show();
+                }
             });
         } catch (Exception e) {
             logger.error("failed to open view.",e);
@@ -348,17 +417,101 @@ public class FolderMapView extends AbstractSwingView {
         if (frame.isShowing()) {
             return;
         }
+        frame.setFocusableWindowState(false);
         frame.setVisible(true);
+        try {
+            Thread.sleep(500);
+            frame.toBack();
+        } catch (Exception ignore) {}
     }
 
-    public void refreshView(String path) {
+    public void refreshView() {
+        Platform.runLater(() -> {
+            ListView<File> fileListView = this.findById("fileList");
+            File file = new File(path);
+            File[] files = file.listFiles();
+            if (files != null) {
+                ObservableList<File> observableList = fileListView.getItems();
+                observableList.clear();
+                observableList.addAll(files);
+            }
+
+        });
+    }
+
+    private void createContextMenu() {
+        if (contextMenu != null) {
+            return;
+        }
+        ResourceBundle bundle = resources.getResourceBundle();
+        contextMenu = new ContextMenu();
         ListView<File> fileListView = this.findById("fileList");
-        File file = new File(path);
-        File[] files = file.listFiles();
-        ObservableList<File> observableList = fileListView.getItems();
-        observableList.clear();
-        observableList.addAll(files);
-    }
 
+        MenuItem itemOpen = new MenuItem(
+                bundle.getString(LangConstants.EXT_MENU_OPEN)
+        );
+        itemOpen.setOnAction(e -> {
+            File target = fileListView.getSelectionModel().getSelectedItem();
+            if (target != null) {
+                try {
+                    Desktop.getDesktop()
+                            .open(target);
+                } catch (Exception ex) {
+                    logger.error("failed to open file", ex);
+                }
+            }
+        });
+
+        MenuItem itemMove = new MenuItem(
+                bundle.getString(LangConstants.EXT_MENU_MOVE)
+        );
+        itemMove.setOnAction(e -> {
+            DirectoryChooser chooser = new DirectoryChooser();
+            File folder = chooser.showDialog(null);
+            if (folder == null) {
+                return;
+            }
+            File target = fileListView.getSelectionModel().getSelectedItem();
+            if (target != null) {
+                try {
+                    Files.move(
+                            target.toPath(),
+                            folder.toPath().resolve(target.getName())
+                    );
+                } catch (Exception ex) {
+                    logger.error("failed to move file", ex);
+                }
+            }
+        });
+
+        MenuItem itemDelete = new MenuItem(
+                bundle.getString(LangConstants.EXT_MENU_DELETE)
+        );
+        itemDelete.setOnAction(e -> {
+            File target = fileListView.getSelectionModel().getSelectedItem();
+            if (target != null) {
+                try {
+                    Files.delete(target.toPath());
+                } catch (Exception ex) {
+                    logger.error("failed to delete file ", ex);
+                }
+            }
+        });
+
+        MenuItem itemRefresh = new MenuItem(
+                bundle.getString(LangConstants.EXT_MENU_REFRESH)
+        );
+        itemRefresh.setOnAction(e -> {
+            refreshView();
+        });
+
+        contextMenu.getItems().addAll(
+                itemOpen,
+                itemMove,
+                itemDelete,
+                new SeparatorMenuItem(),
+                itemRefresh
+        );
+    }
 
 }

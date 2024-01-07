@@ -2,15 +2,21 @@ package org.swdc.toybox.extension.fsmapper.views;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import org.swdc.fx.font.FontSize;
 import org.swdc.fx.font.Fontawsome5Service;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URI;
+import java.net.URL;
+import java.util.*;
 
 public class FileListCell extends ListCell<File> {
 
@@ -51,6 +57,19 @@ public class FileListCell extends ListCell<File> {
         iconsMap.put("m4a","file-audio");
         iconsMap.put("ogg","file-audio");
 
+        iconsMap.put("htm","html5");
+        iconsMap.put("html","html5");
+        iconsMap.put("xhtml","html5");
+
+        iconsMap.put("chm","book");
+        iconsMap.put("epub","book");
+        iconsMap.put("mobi","book");
+        iconsMap.put("awz3","book");
+
+        iconsMap.put("torrent","download");
+        iconsMap.put("url","link");
+        iconsMap.put("lnk","link");
+
     }
 
 
@@ -77,6 +96,21 @@ public class FileListCell extends ListCell<File> {
             );
 
             root.setSpacing(6);
+            root.setOnDragDetected(e -> {
+                try {
+                    Dragboard dragboard = root.startDragAndDrop(TransferMode.COPY_OR_MOVE);
+                    ClipboardContent clipboardContent = new ClipboardContent();
+                    clipboardContent.put(DataFormat.FILES, Arrays.asList(getItem()));
+                    dragboard.setContent(clipboardContent);
+                    e.consume();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+            root.setOnDragDropped(e -> {
+                e.setDropCompleted(true);
+            });
         }
 
 

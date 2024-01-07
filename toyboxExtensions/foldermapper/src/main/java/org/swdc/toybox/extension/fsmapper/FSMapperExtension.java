@@ -126,10 +126,8 @@ public class FSMapperExtension implements Extension {
             MappedFolderService service = context.getByClass(MappedFolderService.class);
             List<MappedFile> folders = service.getAllFolders();
             for (MappedFile folder : folders) {
-                if (folder.isVisible()) {
-                    FolderMapView view = context.getByClass(FolderMapView.class);
-                    view.showMapping(folder);
-                }
+                FolderMapView view = context.getByClass(FolderMapView.class);
+                view.showMapping(folder);
             }
         }
     }

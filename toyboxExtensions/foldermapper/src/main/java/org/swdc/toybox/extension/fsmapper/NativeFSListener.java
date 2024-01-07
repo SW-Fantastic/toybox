@@ -11,9 +11,9 @@ public class NativeFSListener implements JNotifyListener {
 
     private int listenerId;
 
-    private Consumer<String> callback;
+    private Consumer<Void> callback;
 
-    public NativeFSListener(String path, Consumer<String> callback) throws JNotifyException {
+    public NativeFSListener(String path, Consumer<Void> callback) throws JNotifyException {
         this.listenerId = JNotify.addWatch(
                 path,JNotify.FILE_ANY,false,this
         );
@@ -22,22 +22,22 @@ public class NativeFSListener implements JNotifyListener {
 
     @Override
     public void fileCreated(int i, String s, String s1) {
-        this.callback.accept(s + File.separator + s1);
+        this.callback.accept(null);
     }
 
     @Override
     public void fileDeleted(int i, String s, String s1) {
-        this.callback.accept(s + File.separator + s1);
+        this.callback.accept(null);
     }
 
     @Override
     public void fileModified(int i, String s, String s1) {
-        this.callback.accept(s + File.separator + s1);
+        this.callback.accept(null);
     }
 
     @Override
     public void fileRenamed(int i, String s, String s1, String s2) {
-        this.callback.accept(s + File.separator + s2);
+        this.callback.accept(null);
     }
 
     public void dispose() {
