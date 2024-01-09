@@ -14,6 +14,7 @@ import org.swdc.fx.view.View;
 import org.swdc.toybox.extension.ExtensionHelper;
 import org.swdc.toybox.extension.fsmapper.FSMapperExtension;
 import org.swdc.toybox.extension.fsmapper.LangConstants;
+import org.swdc.toybox.extension.fsmapper.entity.MappedFolderService;
 
 import java.io.File;
 
@@ -29,6 +30,9 @@ public class ExtensionConfView extends AbstractView {
 
     @Inject
     private Fontawsome5Service fontawsome5Service;
+
+    @Inject
+    private MappedFolderService service;
 
     @Inject
     private Logger logger;
@@ -63,4 +67,10 @@ public class ExtensionConfView extends AbstractView {
         button.setText(fontawsome5Service.getFontIcon(icon));
     }
 
+    @Override
+    public void show() {
+        service.deActiveAll();
+        super.show();
+        service.reActive();
+    }
 }

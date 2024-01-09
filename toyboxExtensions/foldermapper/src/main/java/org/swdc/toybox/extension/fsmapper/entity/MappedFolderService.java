@@ -9,30 +9,41 @@ import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.objects.Cursor;
 import org.dizitart.no2.objects.ObjectRepository;
 import org.dizitart.no2.objects.filters.ObjectFilters;
+import org.swdc.dependency.DependencyContext;
 import org.swdc.dependency.EventEmitter;
 import org.swdc.dependency.event.AbstractEvent;
 import org.swdc.dependency.event.Events;
 import org.swdc.fx.FXResources;
 import org.swdc.toybox.extension.ExtensionHelper;
+import org.swdc.toybox.extension.fsmapper.FSMapperConfigure;
 import org.swdc.toybox.extension.fsmapper.FSMapperExtension;
+import org.swdc.toybox.extension.fsmapper.views.FolderMapView;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-public class MappedFolderService implements EventEmitter {
+public class MappedFolderService {
 
     private Nitrite documentDB;
 
     private ObjectRepository<MappedFile> mappedFileRepo;
 
-    private Events events;
-
     @Inject
     private FXResources resources;
+
+    @Inject
+    private FSMapperConfigure configure;
+
+    private DependencyContext context;
+
+    private Map<String, FolderMapView> folderViewsMap = new HashMap<>();
 
 
     @PostConstruct
@@ -54,6 +65,21 @@ public class MappedFolderService implements EventEmitter {
         if (!mappedFileRepo.hasIndex("path")) {
             mappedFileRepo.createIndex("path", IndexOptions.indexOptions(IndexType.Unique));
         }
+
+
+
+    }
+
+    public void extensionReady(DependencyContext context) {
+        this.context = context;
+        if (configure.getEnable()) {
+            List<MappedFile> folders = this.getAllFolders();
+            for (MappedFile folder : folders) {
+                FolderMapView view = context.getByClass(FolderMapView.class);
+                view.showMapping(folder);
+                folderViewsMap.put(folder.getPath(),view);
+            }
+        }
     }
 
     public void remove(File theFile) {
@@ -71,8 +97,33 @@ public class MappedFolderService implements EventEmitter {
             return null;
         }
         mappedFileRepo.update(theFile);
-        this.emit(new FileUpdateEvent(theFile));
+        FolderMapView view = folderViewsMap.get(theFile.getPath());
+        if (theFile.isVisible()) {
+            if (view == null) {
+                view = context.getByClass(FolderMapView.class);
+                view.showMapping(theFile);
+                folderViewsMap.put(theFile.getPath(),view);
+            }
+        }
+        if (view != null) {
+            view.getStage().setVisible(theFile.isVisible());
+        }
         return theFile;
+    }
+
+    public void deActiveAll() {
+        for (FolderMapView view : folderViewsMap.values()) {
+            JFrame frame = view.getStage();
+            frame.setVisible(false);
+        }
+    }
+
+    public void reActive() {
+        for (FolderMapView view : folderViewsMap.values()) {
+            JFrame frame = view.getStage();
+            frame.setVisible(true);
+            frame.toBack();
+        }
     }
 
     public MappedFile getByPath(String absolutePath) {
@@ -150,13 +201,5 @@ public class MappedFolderService implements EventEmitter {
         }
     }
 
-    @Override
-    public <T extends AbstractEvent> void emit(T t) {
-        this.events.dispatch(t);
-    }
 
-    @Override
-    public void setEvents(Events events) {
-        this.events = events;
-    }
 }

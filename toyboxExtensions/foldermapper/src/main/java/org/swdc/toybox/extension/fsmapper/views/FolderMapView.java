@@ -95,6 +95,8 @@ public class FolderMapView extends AbstractSwingView {
 
     private boolean locked;
 
+    private boolean initialized;
+
     private Logger logger = LoggerFactory.getLogger(
             FolderMapView.class
     );
@@ -356,15 +358,6 @@ public class FolderMapView extends AbstractSwingView {
         this.direction = null;
     }
 
-    @EventListener(type = FileUpdateEvent.class)
-    public void updated(FileUpdateEvent event) {
-        JFrame frame = getStage();
-        MappedFile mappedFolder = event.getMessage();
-        if (mappedFolder.getPath().equals(path)) {
-            frame.setVisible(mappedFolder.isVisible());
-            refreshView();
-        }
-    }
 
     public void showMapping(MappedFile file) {
         try {
@@ -414,15 +407,24 @@ public class FolderMapView extends AbstractSwingView {
     @Override
     public void show() {
         JFrame frame = getStage();
-        if (frame.isShowing()) {
+        if (initialized) {
+            if (!frame.isShowing()) {
+                frame.setVisible(true);
+                frame.toBack();
+            }
             return;
         }
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowActivated(WindowEvent e) {
+                frame.toBack();
+            }
+
+        });
         frame.setFocusableWindowState(false);
         frame.setVisible(true);
-        try {
-            Thread.sleep(500);
-            frame.toBack();
-        } catch (Exception ignore) {}
+        frame.toBack();
+        initialized = true;
     }
 
     public void refreshView() {
