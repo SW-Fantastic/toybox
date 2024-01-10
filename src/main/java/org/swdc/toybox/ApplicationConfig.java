@@ -32,6 +32,14 @@ public class ApplicationConfig extends org.swdc.fx.config.ApplicationConfig {
     )
     private Boolean realTime;
 
+    @Property("show-search-view")
+    @PropEditor(
+            editor = CheckEditor.class,
+            name = "%toybox.conf.show-search-view",
+            description = "%toybox.conf.show-search-view-desc"
+    )
+    private Boolean showSearchView;
+
     @Property("searchKey")
     @PropEditor(
             editor = SingleKeyboardPropertyEditor.class,
@@ -83,5 +91,13 @@ public class ApplicationConfig extends org.swdc.fx.config.ApplicationConfig {
 
     public void setExtensionKey(String extensionKey) {
         this.extensionKey = extensionKey;
+    }
+
+    public Boolean getShowSearchView() {
+        return showSearchView;
+    }
+
+    public void setShowSearchView(Boolean showSearchView) {
+        this.showSearchView = showSearchView;
     }
 }

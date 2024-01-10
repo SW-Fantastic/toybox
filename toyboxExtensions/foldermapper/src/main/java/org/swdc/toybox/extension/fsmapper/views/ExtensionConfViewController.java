@@ -7,6 +7,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.DirectoryChooser;
+import org.swdc.fx.font.Fontawsome5Service;
 import org.swdc.fx.view.ViewController;
 import org.swdc.toybox.extension.fsmapper.LangConstants;
 import org.swdc.toybox.extension.fsmapper.entity.MappedFile;
@@ -20,6 +21,9 @@ public class ExtensionConfViewController extends ViewController<ExtensionConfVie
 
     @Inject
     private MappedFolderService folderService;
+
+    @Inject
+    private Fontawsome5Service fontawsome5Service;
 
     @FXML
     private TableColumn<MappedFile,String> colPath;
@@ -40,6 +44,13 @@ public class ExtensionConfViewController extends ViewController<ExtensionConfVie
         bundle = resourceBundle;
         colPath.setCellValueFactory(new PropertyValueFactory<>("path"));
         colVisible.setCellFactory(c -> new CheckedTableCell(folderService));
+        colControl.setCellFactory(c -> new ControlTableCell(folderService,fontawsome5Service, v-> {
+
+            ObservableList<MappedFile> files = tableView.getItems();
+            files.clear();
+            files.addAll(folderService.getAllFolders());
+
+        }));
 
         ObservableList<MappedFile> files = tableView.getItems();
         files.clear();
@@ -55,12 +66,10 @@ public class ExtensionConfViewController extends ViewController<ExtensionConfVie
         if (target == null) {
             return;
         }
-        MappedFile file = folderService.add(target);
+        folderService.add(target);
         ObservableList<MappedFile> files = tableView.getItems();
         files.clear();
         files.addAll(folderService.getAllFolders());
-        FolderMapView view = getView().getView(FolderMapView.class);
-        view.showMapping(file);
     }
 
 

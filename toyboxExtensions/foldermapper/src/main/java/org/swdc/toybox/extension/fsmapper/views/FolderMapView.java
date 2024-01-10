@@ -314,6 +314,12 @@ public class FolderMapView extends AbstractSwingView {
         if (file == null) {
             return;
         }
+        if (frame.getWidth() <= 0) {
+            frame.setSize(200,frame.getHeight());
+        }
+        if (frame.getHeight() <= 0) {
+            frame.setSize(frame.getWidth(),200);
+        }
         file.setPosX((double) frame.getX());
         file.setPosY((double) frame.getY());
         file.setWidth((double)frame.getWidth());

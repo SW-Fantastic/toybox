@@ -87,7 +87,13 @@ public class MappedFolderService {
             return;
         }
         Path path = theFile.toPath().toAbsolutePath().normalize();
-        mappedFileRepo.remove(ObjectFilters.eq("path",path));
+        if (folderViewsMap.containsKey(path.toString())) {
+            FolderMapView view = folderViewsMap.remove(path.toString());
+            view.hide();
+        }
+
+        MappedFile file = getByPath(path.toString());
+        mappedFileRepo.remove(file);
         documentDB.commit();
         documentDB.compact();
     }
@@ -182,6 +188,13 @@ public class MappedFolderService {
             file.setVisible(true);
 
             mappedFileRepo.insert(file);
+
+            if (!folderViewsMap.containsKey(path.toString())) {
+                FolderMapView mapView = context.getByClass(FolderMapView.class);
+                mapView.showMapping(file);
+                folderViewsMap.put(path.toString(),mapView);
+            }
+
             return file;
         }
         return files.firstOrDefault();

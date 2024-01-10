@@ -145,7 +145,9 @@ public class ToyBoxApplication extends FXApplication {
             });
             tray.add(icon);
 
-            mainView.show();
+            if (config.getShowSearchView()) {
+                mainView.show();
+            }
 
         } catch (Exception e) {
             logger.error("failed to register native hook.");

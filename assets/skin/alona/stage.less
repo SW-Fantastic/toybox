@@ -7,6 +7,18 @@
 @backgroundHover: #FFF;
 @border: #D1E1F0;
 
+.scroll-bar {
+     -fx-background-color: rgba(255,255,255,0);
+    .track {
+        -fx-background-color: rgba(255,255,255,0);
+    }
+    .thumb {
+        -fx-background-color: #FFF;
+        -fx-background-radius: 4;
+        -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+    }
+}
+
 .notification-bar {
     .pane {
         -fx-background-color: rgba(0,0,0,0);
