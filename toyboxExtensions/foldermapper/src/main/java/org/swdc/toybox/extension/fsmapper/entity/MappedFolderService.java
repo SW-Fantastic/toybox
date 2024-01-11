@@ -107,12 +107,8 @@ public class MappedFolderService {
         if (theFile.isVisible()) {
             if (view == null) {
                 view = context.getByClass(FolderMapView.class);
-                view.showMapping(theFile);
                 folderViewsMap.put(theFile.getPath(),view);
             }
-        }
-        if (view != null) {
-            view.getStage().setVisible(theFile.isVisible());
         }
         return theFile;
     }

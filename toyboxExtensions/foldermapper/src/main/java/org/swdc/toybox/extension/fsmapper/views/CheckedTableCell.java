@@ -43,7 +43,9 @@ public class CheckedTableCell extends TableCell<MappedFile,MappedFile> {
                     return;
                 }
                 file.setVisible(checkBox.isSelected());
+                folderService.deActiveAll();
                 folderService.update(file);
+                folderService.reActive();
             });
             root.getChildren().add(checkBox);
             root.setFillHeight(true);

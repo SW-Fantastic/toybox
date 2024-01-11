@@ -45,6 +45,16 @@ public class FileListCell extends ListCell<File> {
         iconsMap.put("gz","file-archive");
         iconsMap.put("xz","file-archive");
 
+        iconsMap.put("png","image");
+        iconsMap.put("jpg","image");
+        iconsMap.put("jpeg","image");
+        iconsMap.put("bmp","image");
+        iconsMap.put("gif","image");
+        iconsMap.put("tiff","image");
+        iconsMap.put("svg","image");
+        iconsMap.put("ai","image");
+        iconsMap.put("webp","image");
+
         iconsMap.put("xls","file-excel");
         iconsMap.put("xlsx","file-excel");
         iconsMap.put("doc","file-word");
@@ -57,9 +67,18 @@ public class FileListCell extends ListCell<File> {
         iconsMap.put("m4a","file-audio");
         iconsMap.put("ogg","file-audio");
 
+        iconsMap.put("mp4","film");
+        iconsMap.put("wmv","film");
+        iconsMap.put("mkv","film");
+        iconsMap.put("rmvb","film");
+
         iconsMap.put("htm","html5");
         iconsMap.put("html","html5");
         iconsMap.put("xhtml","html5");
+
+        iconsMap.put("jar","coffee");
+        iconsMap.put("java","coffee");
+        iconsMap.put("class","coffee");
 
         iconsMap.put("chm","book");
         iconsMap.put("epub","book");
@@ -69,6 +88,18 @@ public class FileListCell extends ListCell<File> {
         iconsMap.put("torrent","download");
         iconsMap.put("url","link");
         iconsMap.put("lnk","link");
+
+        iconsMap.put("exe","terminal");
+        iconsMap.put("bat","terminal");
+        iconsMap.put("cmd","terminal");
+        iconsMap.put("sh","terminal");
+        iconsMap.put("msi","terminal");
+
+        iconsMap.put("ini","cog");
+        iconsMap.put("inf","cog");
+        iconsMap.put("conf","cog");
+        iconsMap.put("properties","cog");
+        iconsMap.put("json","cog");
 
     }
 
