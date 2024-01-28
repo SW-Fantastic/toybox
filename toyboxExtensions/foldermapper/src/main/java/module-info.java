@@ -6,6 +6,7 @@ module toybox.foldermapper {
     requires swdc.application.dependency;
     requires swdc.application.fx;
     requires swdc.application.configs;
+    requires com.fasterxml.jackson.databind;
 
     requires toybox.extension;
     requires javafx.graphics;
@@ -15,7 +16,6 @@ module toybox.foldermapper {
     requires jakarta.inject;
     requires jakarta.annotation;
 
-    requires nitrite;
     requires jnotify;
 
     provides org.swdc.toybox.extension.Extension with org.swdc.toybox.extension.fsmapper.FSMapperExtension;

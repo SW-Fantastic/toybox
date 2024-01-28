@@ -31,8 +31,8 @@ public class CheckedTableCell extends TableCell<MappedFile,MappedFile> {
         if (root == null) {
             root = new HBox();
             root.setAlignment(Pos.CENTER);
-
             checkBox = new CheckBox();
+            checkBox.setSelected(getTableRow().getItem().isVisible());
             checkBox.selectedProperty().addListener(v -> {
                 TableRow<MappedFile> row = getTableRow();
                 if (row == null || row.isEmpty()) {
@@ -51,7 +51,6 @@ public class CheckedTableCell extends TableCell<MappedFile,MappedFile> {
             root.setFillHeight(true);
             HBox.setHgrow(root, Priority.ALWAYS);
         }
-        checkBox.setSelected(getTableRow().getItem().isVisible());
         setGraphic(root);
     }
 }

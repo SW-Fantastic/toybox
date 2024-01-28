@@ -1,7 +1,6 @@
 package org.swdc.toybox.extension;
 
 import javafx.scene.image.Image;
-import org.swdc.config.AbstractConfig;
 import org.swdc.dependency.DependencyContext;
 
 import java.io.File;

@@ -1,10 +1,8 @@
 package org.swdc.toybox.extension.fsmapper.entity;
 
-import org.dizitart.no2.objects.Id;
 
 public class MappedFile {
 
-    @Id
     private String id;
 
     private String path;
@@ -20,6 +18,7 @@ public class MappedFile {
     private boolean visible;
 
     private boolean locked;
+
 
     public String getId() {
         return id;
@@ -84,4 +83,5 @@ public class MappedFile {
     public void setLocked(boolean locked) {
         this.locked = locked;
     }
+
 }

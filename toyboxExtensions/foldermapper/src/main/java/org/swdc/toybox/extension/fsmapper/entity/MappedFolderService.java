@@ -1,39 +1,32 @@
 package org.swdc.toybox.extension.fsmapper.entity;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.inject.Inject;
-import org.dizitart.no2.IndexOptions;
-import org.dizitart.no2.IndexType;
-import org.dizitart.no2.Nitrite;
-import org.dizitart.no2.objects.Cursor;
-import org.dizitart.no2.objects.ObjectRepository;
-import org.dizitart.no2.objects.filters.ObjectFilters;
+import org.slf4j.Logger;
 import org.swdc.dependency.DependencyContext;
-import org.swdc.dependency.EventEmitter;
-import org.swdc.dependency.event.AbstractEvent;
-import org.swdc.dependency.event.Events;
 import org.swdc.fx.FXResources;
-import org.swdc.toybox.extension.ExtensionHelper;
 import org.swdc.toybox.extension.fsmapper.FSMapperConfigure;
-import org.swdc.toybox.extension.fsmapper.FSMapperExtension;
 import org.swdc.toybox.extension.fsmapper.views.FolderMapView;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class MappedFolderService {
 
-    private Nitrite documentDB;
-
-    private ObjectRepository<MappedFile> mappedFileRepo;
+    @Inject
+    private Logger logger;
 
     @Inject
     private FXResources resources;
@@ -43,30 +36,35 @@ public class MappedFolderService {
 
     private DependencyContext context;
 
+    private Map<String, MappedFile> allFiles = new ConcurrentHashMap<>();
+    private Map<String, MappedFile> pathIndexedFiles = new ConcurrentHashMap<>();
+
     private Map<String, FolderMapView> folderViewsMap = new HashMap<>();
 
+    private ObjectMapper mapper;
+
+    private Path dbPath;
 
     @PostConstruct
     public void initDataSource() {
 
-        documentDB = Nitrite.builder()
-                .compressed()
-                .filePath(
-                        resources.getAssetsFolder()
-                                .getAbsolutePath()
-                                + "/extension/folder-mapper/mapped.db"
-                )
-                .openOrCreate();
+        dbPath = Paths.get(resources.getAssetsFolder().getAbsolutePath()
+                + "/extension/folder-mapper/mappedFolders.json");
 
-        mappedFileRepo = documentDB.getRepository(MappedFile.class);
-        if (!mappedFileRepo.hasIndex("id")) {
-            mappedFileRepo.createIndex("id", IndexOptions.indexOptions(IndexType.Unique));
+        mapper = new ObjectMapper();
+
+        try {
+            if (Files.exists(dbPath)) {
+                JavaType type = mapper.getTypeFactory().constructParametricType(List.class,MappedFile.class);
+                List<MappedFile> folders = mapper.readValue(Files.readString(dbPath),type);
+                for (MappedFile file: folders) {
+                    allFiles.put(file.getId(),file);
+                    pathIndexedFiles.put(file.getPath(),file);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("failed to load file", e);
         }
-        if (!mappedFileRepo.hasIndex("path")) {
-            mappedFileRepo.createIndex("path", IndexOptions.indexOptions(IndexType.Unique));
-        }
-
-
 
     }
 
@@ -93,16 +91,26 @@ public class MappedFolderService {
         }
 
         MappedFile file = getByPath(path.toString());
-        mappedFileRepo.remove(file);
-        documentDB.commit();
-        documentDB.compact();
+        pathIndexedFiles.remove(path.toString());
+        allFiles.remove(file.getId());
+
+        flush();
     }
 
     public MappedFile update(MappedFile theFile) {
         if (theFile == null || theFile.getId() == null || theFile.getId().isBlank()) {
             return null;
         }
-        mappedFileRepo.update(theFile);
+        if (allFiles.containsKey(theFile.getId())) {
+            MappedFile file = allFiles.get(theFile.getId());
+            file.setPosY(theFile.getPosY());
+            file.setPosX(theFile.getPosX());
+            file.setWidth(theFile.getWidth());
+            file.setHeight(theFile.getHeight());
+            file.setVisible(theFile.isVisible());
+            file.setLocked(theFile.isLocked());
+            flush();
+        }
         FolderMapView view = folderViewsMap.get(theFile.getPath());
         if (theFile.isVisible()) {
             if (view == null) {
@@ -132,13 +140,10 @@ public class MappedFolderService {
         if (absolutePath == null || absolutePath.isBlank()) {
             return null;
         }
-        Cursor<MappedFile> cursor = mappedFileRepo.find(
-                ObjectFilters.eq("path",absolutePath)
-        );
-        if (cursor == null || cursor.size() == 0) {
+        if (!pathIndexedFiles.containsKey(absolutePath)) {
             return null;
         }
-        return cursor.firstOrDefault();
+        return pathIndexedFiles.get(absolutePath);
     }
 
     public MappedFile add(File theFile) {
@@ -150,13 +155,7 @@ public class MappedFolderService {
             return null;
         }
 
-        Cursor<MappedFile> files = mappedFileRepo.find(
-                ObjectFilters.eq(
-                        "path",
-                        path.toString()
-                )
-        );
-        if (files == null || files.size() == 0) {
+        if (!pathIndexedFiles.containsKey(path.toString())) {
             GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice device = environment.getDefaultScreenDevice();
             GraphicsConfiguration configuration = device.getDefaultConfiguration();
@@ -183,7 +182,10 @@ public class MappedFolderService {
             file.setHeight(361.0);
             file.setVisible(true);
 
-            mappedFileRepo.insert(file);
+            pathIndexedFiles.put(path.toString(),file);
+            allFiles.put(file.getId(),file);
+
+
 
             if (!folderViewsMap.containsKey(path.toString())) {
                 FolderMapView mapView = context.getByClass(FolderMapView.class);
@@ -193,21 +195,26 @@ public class MappedFolderService {
 
             return file;
         }
-        return files.firstOrDefault();
+
+        return pathIndexedFiles.get(path.toString());
+    }
+
+    private void flush() {
+        try (OutputStream fos = Files.newOutputStream(dbPath)){
+            mapper.writerWithDefaultPrettyPrinter()
+                    .writeValue(fos,getAllFolders());
+        } catch (Exception e) {
+            logger.error("failed to save data", e);
+        }
     }
 
     public List<MappedFile> getAllFolders() {
-        return mappedFileRepo.find()
-                .toList();
+        return List.copyOf(allFiles.values());
     }
 
     @PreDestroy
     public void destroy() {
-        if (documentDB != null) {
-            documentDB.commit();
-            documentDB.close();
-            documentDB = null;
-        }
+        flush();
     }
 
 
