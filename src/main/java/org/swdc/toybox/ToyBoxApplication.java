@@ -1,9 +1,5 @@
 package org.swdc.toybox;
 
-import com.github.kwhat.jnativehook.GlobalScreen;
-import com.github.kwhat.jnativehook.NativeHookException;
-import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
-import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import net.contentobjects.jnotify.JNotify;
@@ -26,7 +22,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -36,7 +31,8 @@ import java.util.ResourceBundle;
  * 应用启动和依赖控制的类
  * @author SW-Fantastic
  */
-@SWFXApplication(assetsFolder = "./assets",
+@SWFXApplication(
+        assetsFolder = "./assets",
         splash = SplashScreen.class,
         configs = { ApplicationConfig.class },
         icons = { "search-16.png","search-24.png","search-32.png","search-64.png","search-128.png","search-256.png" })

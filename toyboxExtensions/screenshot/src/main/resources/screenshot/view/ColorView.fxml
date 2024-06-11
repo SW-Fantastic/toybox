@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="64.0" prefWidth="222.0" styleClass="screenshot-color-pane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="8.0" BorderPane.alignment="CENTER">
+         <children>
+            <Canvas id="canvas" height="50.0" width="49.0" />
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="8.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Color:" />
+                  <TextField id="txtColor" prefHeight="29.0" prefWidth="157.0" />
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+         </padding>
+      </HBox>
+   </center>
+</BorderPane>

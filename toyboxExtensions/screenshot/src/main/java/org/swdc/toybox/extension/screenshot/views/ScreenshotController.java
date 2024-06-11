@@ -5,8 +5,10 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
 import org.slf4j.Logger;
 import org.swdc.fx.font.Fontawsome5Service;
@@ -103,7 +105,9 @@ public class ScreenshotController extends ViewController<ScreenshotView> {
 
     @FXML
     public void onMouseMove(MouseEvent event) {
+
         ScreenshotView view = getView();
+        view.updateColorTip(event.getSceneX(),event.getSceneY());
 
         if (this.dragType == DragType.RANGE) {
 

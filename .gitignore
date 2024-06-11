@@ -14,3 +14,4 @@
 /toyboxExtensions/*/.idea
 
 *.iml
+/deploy/

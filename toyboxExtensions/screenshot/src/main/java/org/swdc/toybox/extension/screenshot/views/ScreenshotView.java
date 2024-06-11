@@ -12,13 +12,12 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Transform;
@@ -60,6 +59,9 @@ public class ScreenshotView extends AbstractSwingView {
     @Inject
     private Fontawsome5Service fontawsome5Service;
 
+    @Inject
+    private ColorTooltipView tooltipView;
+
     @Named("applicationConfig")
     private ApplicationConfig config;
 
@@ -90,6 +92,11 @@ public class ScreenshotView extends AbstractSwingView {
             }
         });
 
+        BorderPane colorPane = (BorderPane) tooltipView.getView();
+
+        Group gp = (Group) this.getView();
+        gp.getChildren().add(colorPane);
+
         GraphicsConfiguration configuration = stage.getGraphicsConfiguration();
 
         stage.setSize(configuration.getBounds().getSize());
@@ -102,7 +109,7 @@ public class ScreenshotView extends AbstractSwingView {
         setupDrawableTool(findById("arrow"),"arrow-left", ArrowDrawable::new);
 
         setupButton(findById("save"),"save");
-
+        setupButton(findById("colorToggle"),"eye-dropper");
 
         String basePath = helper.getAssetFolder(ScreenShotExtension.class).getAbsolutePath();
         String themePath = basePath + File.separator + config.getTheme();
@@ -128,7 +135,7 @@ public class ScreenshotView extends AbstractSwingView {
         drawableFactoryMap.put(item,drawableFactory);
     }
 
-    private void setupButton(Button button, String iconName) {
+    private void setupButton(ButtonBase button, String iconName) {
         button.setFont(fontawsome5Service.getSolidFont(FontSize.SMALL));
         button.setPadding(new Insets(4));
         button.setText(fontawsome5Service.getFontIcon(iconName));
@@ -176,6 +183,25 @@ public class ScreenshotView extends AbstractSwingView {
         } else {
             toolBar.setVisible(false);
         }
+    }
+
+    public void updateColorTip(double x, double y) {
+
+        JFrame frame = getStage();
+        GraphicsConfiguration configuration = frame.getGraphicsConfiguration();
+        AffineTransform transform = configuration.getDefaultTransform();
+
+        ToggleButton colorToggle = findById("colorToggle");
+
+        BorderPane pane = (BorderPane) tooltipView.getView();
+        pane.setLayoutX(x);
+        pane.setLayoutY(y);
+        Color color = captured.getPixelReader()
+                .getColor(
+                        (int)(x * transform.getScaleX()),
+                        (int)(y * transform.getScaleY())
+                );
+        tooltipView.updateColor(x,y,color,colorToggle.isSelected());
     }
 
     public Drawable getDrawable(double x, double y) {
@@ -281,6 +307,10 @@ public class ScreenshotView extends AbstractSwingView {
 
         clearAllDrawables();
         clearSelectedDrawable();
+
+        ToggleButton colorToggle = findById("colorToggle");
+        colorToggle.setSelected(false);
+        tooltipView.updateColor(0,0,null,false);
 
         super.hide();
 
