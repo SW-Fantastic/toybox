@@ -2,6 +2,7 @@ package org.swdc.toybox;
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.control.Alert;
 import net.contentobjects.jnotify.JNotify;
 import org.swdc.data.EMFProviderFactory;
 import org.swdc.dependency.DependencyContext;
@@ -25,6 +26,10 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileLock;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ResourceBundle;
 
 /**
@@ -39,6 +44,8 @@ import java.util.ResourceBundle;
 public class ToyBoxApplication extends FXApplication {
 
     private DependencyContext context;
+
+    private FileLock applicationLock;
 
     private void configJNotify(File assetFolder) {
         String osName = System.getProperty("os.name").toLowerCase();
@@ -97,6 +104,26 @@ public class ToyBoxApplication extends FXApplication {
 
         FXResources resources = dependencyContext.getByClass(FXResources.class);
         configJNotify(resources.getAssetsFolder());
+
+        try {
+            Path lock = Path.of(resources.getAssetsFolder().getAbsolutePath(),".lock");
+            if (!Files.exists(lock)) {
+                Files.createFile(lock);
+            }
+            RandomAccessFile file = new RandomAccessFile(lock.toAbsolutePath().toString(),"rw");
+            applicationLock = file.getChannel().tryLock();
+            if (applicationLock == null || !applicationLock.isValid() || applicationLock.isShared()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setHeaderText(null);
+                alert.setContentText(resources.getResourceBundle().getString(LangConstants.APP_ALREADY_STARTED));
+                alert.showAndWait();
+                Platform.exit();
+                return;
+            }
+        } catch (Exception e) {
+            Platform.exit();
+            return;
+        }
 
         EMFProviderFactory factory = dependencyContext.getByClass(EMFProviderFactory.class);
         factory.create();

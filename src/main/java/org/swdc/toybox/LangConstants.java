@@ -12,4 +12,7 @@ public interface LangConstants {
 
     String DLG_WARN = "toybox.dialogs.warn";
     String PREVIEW_TEXT_TOO_LARGE = "toybox.previews.text-too-large";
+
+    String APP_ALREADY_STARTED = "toybox.dialog.already_started";
+
 }
