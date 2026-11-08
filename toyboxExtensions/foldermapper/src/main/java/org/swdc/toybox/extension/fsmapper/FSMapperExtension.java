@@ -6,17 +6,16 @@ import org.swdc.dependency.DependencyContext;
 import org.swdc.fx.FXResources;
 import org.swdc.fx.MultipleSourceResourceBundle;
 import org.swdc.fx.config.ApplicationConfig;
+import org.swdc.fx.view.Theme;
 import org.swdc.toybox.extension.Extension;
 import org.swdc.toybox.extension.NamedConfigure;
-import org.swdc.toybox.extension.fsmapper.entity.MappedFile;
-import org.swdc.toybox.extension.fsmapper.entity.MappedFolderService;
+import org.swdc.toybox.extension.fsmapper.service.MappedFolderService;
 import org.swdc.toybox.extension.fsmapper.views.ExtensionConfView;
-import org.swdc.toybox.extension.fsmapper.views.FolderMapView;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
@@ -30,6 +29,10 @@ public class FSMapperExtension implements Extension {
     private Logger logger;
 
     private Image icon;
+
+    private Theme assetTheme;
+
+    private File extensionAssets;
 
     private synchronized void initialize(){
         if (initialized) {
@@ -56,6 +59,8 @@ public class FSMapperExtension implements Extension {
             }
             ResourceBundle theBundle = new PropertyResourceBundle(new InputStreamReader(in, StandardCharsets.UTF_8));
             bundle.addResource(theBundle);
+
+
         } catch (Exception e) {
             logger.error("can not read language, ",e);
         }
@@ -102,7 +107,6 @@ public class FSMapperExtension implements Extension {
     public void registered(DependencyContext context) {
         this.logger = context.getByClass(Logger.class);
         this.context = context;
-
         if (!initialized) {
             initialize();
         }

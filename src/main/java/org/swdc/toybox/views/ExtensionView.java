@@ -3,6 +3,7 @@ package org.swdc.toybox.views;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import org.controlsfx.control.GridView;
 import org.swdc.fx.view.AbstractView;
 import org.swdc.fx.view.View;
@@ -12,7 +13,7 @@ import org.swdc.toybox.extension.Extension;
 @View(
         title = "%toybox.view.extension",
         viewLocation = "views/main/ExtensionView.fxml",
-        resizeable = false
+        stage = false
 )
 public class ExtensionView extends AbstractView {
 

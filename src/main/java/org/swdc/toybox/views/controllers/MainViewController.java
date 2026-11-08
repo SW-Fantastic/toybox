@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.swdc.dependency.annotations.EventListener;
 import org.swdc.fx.FXResources;
@@ -43,7 +44,7 @@ public class MainViewController extends ViewController<MainView> {
     private IndexerContext indexerContext;
 
     @Inject
-    private IndexFolderView folderView;
+    private PreferenceView preferenceView;
 
     @Inject
     private SearchSubView searchSubView;
@@ -52,14 +53,9 @@ public class MainViewController extends ViewController<MainView> {
     private SettingView settingView;
 
     @Inject
-    private ExtensionView extensionView;
-
-    @Inject
     private FXResources resources;
 
     private Future<List<File>> searching;
-
-
 
     @EventListener(type = IndexerInitializeEvent.class)
     public void onIndexerInitialize(IndexerInitializeEvent event) {
@@ -86,16 +82,17 @@ public class MainViewController extends ViewController<MainView> {
     public void viewReady(URL url, ResourceBundle resourceBundle) {
 
         MainView mainView = getView();
-        BorderPane mainViewPane = (BorderPane)mainView.getView();
+        BorderPane mainViewParent = (BorderPane)mainView.getView();
+        BorderPane mainViewPane = (BorderPane)mainViewParent.getCenter();
         BorderPane searchView = (BorderPane) searchSubView.getView();
-        VBox searchArea = (VBox) mainViewPane.getTop();
+
+        StackPane searchArea = (StackPane) mainViewPane.getTop();
         searchView.prefHeightProperty().bind(
                 mainViewPane
                 .heightProperty()
                 .subtract(searchArea.heightProperty())
-                .subtract(80)
         );
-        searchView.prefWidthProperty().bind(mainViewPane.widthProperty().subtract(12));
+        searchView.prefWidthProperty().bind(mainViewPane.widthProperty());
 
     }
 
@@ -103,7 +100,8 @@ public class MainViewController extends ViewController<MainView> {
     public void searchKeyRelease(KeyEvent event) {
 
         MainView mainView = getView();
-        BorderPane pane = (BorderPane) mainView.getView();
+        BorderPane parent = (BorderPane) mainView.getView();
+        BorderPane pane = (BorderPane) parent.getCenter();
         if (event.getCode() == KeyCode.ESCAPE) {
             if (!searchField.getText().isBlank()) {
                 searchField.setText("");
@@ -141,13 +139,15 @@ public class MainViewController extends ViewController<MainView> {
     }
 
     @FXML
-    public void onExtensionView(){
-        extensionView.show();
+    public void onManageFolders() {
+        preferenceView.show();
+        this.getView().hide();
     }
 
     @FXML
-    public void onManageFolders() {
-        folderView.show();
+    public void showSetting() {
+        settingView.show();
+        this.getView().hide();
     }
 
     @FXML
@@ -162,9 +162,5 @@ public class MainViewController extends ViewController<MainView> {
         indexerContext.refreshIndexes();
     }
 
-    @FXML
-    public void showSetting() {
-        settingView.show();
-    }
 
 }

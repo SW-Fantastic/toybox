@@ -6,6 +6,7 @@ import org.swdc.config.annotations.Property;
 import org.swdc.config.configs.JsonConfigHandler;
 import org.swdc.fx.config.PropEditor;
 import org.swdc.fx.config.editors.CheckEditor;
+import org.swdc.fx.config.editors.FolderSelectEditor;
 import org.swdc.toybox.extension.NamedConfigure;
 
 @ConfigureSource(
@@ -15,12 +16,21 @@ import org.swdc.toybox.extension.NamedConfigure;
 public class FSMapperConfigure extends NamedConfigure {
 
     @PropEditor(
-            name = "%" + LangConstants.EXT_NAME,
+            name = "%" + LangConstants.EXT_CONF_NAME,
             description = "%" + LangConstants.EXT_CONF_DESC,
             editor = CheckEditor.class
     )
     @Property("folder-mapper-enable")
     private Boolean enable;
+
+    @Property("theme")
+    @PropEditor(
+            editor = FolderSelectEditor.class,
+            name = "%toybox.ext.folder-mapping.conf-theme",
+            description = "%app.theme.desc",
+            resource = "extension/folder-mapper/skin"
+    )
+    private String theme;
 
     public Boolean getEnable() {
         return enable;
@@ -33,5 +43,13 @@ public class FSMapperConfigure extends NamedConfigure {
     @Override
     public String configName() {
         return "%" + LangConstants.EXT_CONF_NAME;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
     }
 }

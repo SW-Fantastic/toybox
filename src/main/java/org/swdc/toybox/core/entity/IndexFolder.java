@@ -1,6 +1,7 @@
 package org.swdc.toybox.core.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 
 @Entity
 public class IndexFolder {

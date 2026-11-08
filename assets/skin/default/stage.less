@@ -129,74 +129,7 @@
     }
 }
 
-.settingView {
-
-    -fx-background-color: @background;
-
-    .settingList {
-
-        -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
-        -fx-background-color: #FFF;
-
-        .list-cell {
-            -fx-background-color: #FFF;
-            &:filled {
-                &:hover {
-                    -fx-background-color: @border;
-                    -fx-text-fill: @textPrimary;
-                }
-                &:selected {
-                    -fx-text-background-color: #FFF;
-                    -fx-background-color: @textPrimaryLight;
-                    -fx-text-fill: #FFF;
-                }
-            }
-        }
-    }
-
-    .button {
-
-        -fx-background-color: @textPrimary;
-        -fx-text-fill: #FFF;
-
-        &:hover {
-            -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 3, 0.0, 0, 2);
-            -fx-background-color: @textPrimaryLight;
-        }
-
-    }
-
-    .prop-sheet {
-        -fx-background: rgba(255,255,255,0);
-        .label{
-            -fx-font-size: 14;
-        }
-        .text-field {
-            -fx-font-size: 14;
-            -fx-background-color: #FFF;
-            -fx-border-radius: 6;
-            -fx-text-filled: @textPrimary;
-            -fx-effect: dropshadow(three-pass-box, @textPrimary, 6, 0, 0, 0);
-        }
-        .combo-box {
-            .comb-custom(#FFF,@textPrimary,@textPrimaryLight)
-        }
-        .check-box {
-            -fx-background-color: rgba(0,0,0,0);
-            -fx-padding: 4 0 4 0;
-            .box {
-                -fx-background-color:#FFF;
-                -fx-effect: dropshadow(three-pass-box, @textPrimary, 6, 0, 0, 0);
-                &:selected .mark  {
-                    -fx-background-color:@textPrimaryLight;
-                }
-            }
-        }
-    }
-
-}
-
-.dialogView {
+.dialog-view {
 
     -fx-background-color: @background;
 
@@ -245,6 +178,74 @@
                     -fx-background-radius: 8;
                     -fx-background-color: @textPrimaryLight;
                     -fx-fill: #FFF;
+                }
+            }
+        }
+    }
+
+    .side-navbar {
+
+        -fx-background-color: @background;
+        -fx-border-color: @border;
+        -fx-border-width: 0 1 0 0;
+        -fx-border-style: solid;
+        .toggle-button {
+            -fx-background-color: @background;
+            -fx-text-fill: @textPrimary;
+            &:hover {
+                -fx-text-fill: @textPrimaryLight;
+            }
+            &:selected {
+                -fx-text-fill: @textPrimaryLight;
+                -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+            }
+        }
+    }
+
+    .tab-list {
+
+        -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+        -fx-background-color: #FFF;
+
+        .list-cell {
+            -fx-background-color: #FFF;
+            &:filled {
+                &:hover {
+                    -fx-background-color: @border;
+                    -fx-text-fill: @textPrimary;
+                }
+                &:selected {
+                    -fx-text-background-color: #FFF;
+                    -fx-background-color: @textPrimaryLight;
+                    -fx-text-fill: #FFF;
+                }
+            }
+        }
+    }
+
+    .prop-sheet {
+        -fx-background: rgba(255,255,255,0);
+        .label{
+            -fx-font-size: 14;
+        }
+        .text-field {
+            -fx-font-size: 14;
+            -fx-background-color: #FFF;
+            -fx-border-radius: 6;
+            -fx-text-filled: @textPrimary;
+            -fx-effect: dropshadow(three-pass-box, @textPrimary, 6, 0, 0, 0);
+        }
+        .combo-box {
+            .comb-custom(#FFF,@textPrimary,@textPrimaryLight)
+        }
+        .check-box {
+            -fx-background-color: rgba(0,0,0,0);
+            -fx-padding: 4 0 4 0;
+            .box {
+                -fx-background-color:#FFF;
+                -fx-effect: dropshadow(three-pass-box, @textPrimary, 6, 0, 0, 0);
+                &:selected .mark  {
+                    -fx-background-color:@textPrimaryLight;
                 }
             }
         }

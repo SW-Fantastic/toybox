@@ -1,11 +1,12 @@
 package org.swdc.toybox.views;
 
-import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -13,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.swdc.fx.font.FontSize;
 import org.swdc.fx.font.Fontawsome5Service;
+import org.swdc.toybox.core.FileViewUtil;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +28,8 @@ public class SearchListCell extends ListCell<File> {
     private Fontawsome5Service fontawsome5Service;
 
     private Label icon;
+
+    private ImageView iconView;
 
     private Label fileName;
 
@@ -43,17 +48,30 @@ public class SearchListCell extends ListCell<File> {
             setGraphic(null);
         } else {
             if (cellBox == null) {
+
                 cellBox = new HBox();
                 cellBox.prefWidthProperty().bind(getListView().widthProperty().subtract(48));
                 cellBox.setFillHeight(true);
-                cellBox.setSpacing(12);
+                cellBox.setSpacing(8);
+                cellBox.setAlignment(Pos.CENTER_LEFT);
 
-                icon = new Label();
-                icon.setFont(fontawsome5Service.getRegularFont(FontSize.MIDDLE_LARGE));
-                icon.setPadding(new Insets(8,12,8,12));
-                icon.setMinWidth(64);
-                icon.setText(fontawsome5Service.getFontIcon(item.isDirectory() ? "folder" : "file"));
-                cellBox.getChildren().add(icon);
+                Image image = FileViewUtil.getImageIcon(item);
+                if (image != null) {
+                    iconView = new ImageView(image);
+                    iconView.setFitHeight(48);
+                    iconView.setFitWidth(48);
+                    iconView.setPreserveRatio(true);
+                    iconView.setSmooth(true);
+                    iconView.setImage(image);
+                    cellBox.getChildren().add(iconView);
+                } else {
+                    icon = new Label();
+                    icon.setFont(fontawsome5Service.getRegularFont(FontSize.MIDDLE_LARGE));
+                    icon.setPadding(new Insets(8,12,8,12));
+                    icon.setMinWidth(64);
+                    icon.setText(fontawsome5Service.getFontIcon(item.isDirectory() ? "folder" : "file"));
+                    cellBox.getChildren().add(icon);
+                }
 
                 VBox lines = new VBox();
                 lines.setSpacing(6);
@@ -66,6 +84,7 @@ public class SearchListCell extends ListCell<File> {
 
                 fileName = new Label();
                 fileName.setText(item.getName());
+                fileName.getStyleClass().add("search-file-name");
                 nameContainer.getChildren().add(fileName);
 
                 HBox pathContainer = new HBox();
@@ -74,6 +93,7 @@ public class SearchListCell extends ListCell<File> {
 
                 filePath = new Label();
                 filePath.setText(item.getAbsolutePath());
+                filePath.getStyleClass().add("search-file-path");
                 pathContainer.getChildren().add(filePath);
 
                 lines.getChildren().addAll(nameContainer,pathContainer);
@@ -109,7 +129,14 @@ public class SearchListCell extends ListCell<File> {
 
                 cellBox.getChildren().add(control);
             } else {
-                icon.setText(fontawsome5Service.getFontIcon(item.isDirectory() ? "folder" : "file"));
+                Image image = FileViewUtil.getImageIcon(item);
+                if (image != null) {
+                    iconView.setImage(image);
+                } else {
+                    icon.setText(fontawsome5Service.getFontIcon(
+                            item.isDirectory() ? "folder" : "file"
+                    ));
+                }
                 filePath.setText(item.getAbsolutePath());
                 fileName.setText(item.getName());
 

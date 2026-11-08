@@ -21,6 +21,8 @@
 
 .notification-bar {
     .pane {
+        -fx-font-family: "寒蝉半圆体";
+        -fx-font-size: 14;
         -fx-background-color: rgba(0,0,0,0);
         .dialog-pane {
             -fx-background-color: @background;
@@ -129,12 +131,43 @@
     }
 }
 
-.settingView {
 
-    -fx-background-image: url(./dialogBg.png);
-    -fx-background-size: cover;
+.dialog-view {
 
-    .settingList {
+    -fx-font-family: "寒蝉半圆体";
+    -fx-font-size: 14;
+
+    .dialog-wrapper {
+        -fx-background-image: url(./dialog-bg.png);
+        -fx-background-size: cover;
+         .dialog-inner {
+            -fx-background-color: rgba(255,255,255,0.5);
+         }
+    }
+
+    .side-nav-inner {
+        -fx-background-color: #FFF;
+        -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+        -fx-background-radius: 8;
+
+        .toggle-button {
+            -fx-background-color: transparent;
+            -fx-border-color: transparent;
+            -fx-border-width: 1;
+            -fx-border-style: dashed;
+            -fx-border-radius: 8;
+            -fx-text-fill: @textPrimary;
+            &:hover {
+                -fx-text-fill: @textPrimaryLight;
+            }
+            &:selected {
+                -fx-text-fill: @textPrimaryLight;
+                -fx-border-color: @textPrimary;
+            }
+        }
+    }
+
+    .tab-list {
 
         -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
         -fx-background-color: #FFF;
@@ -168,7 +201,7 @@
     }
 
     .prop-sheet {
-        -fx-background: rgba(255,255,255,0.2);
+        -fx-background: rgba(255,255,255,0.4);
         -fx-background-radius: 8;
 
         .label{
@@ -178,18 +211,23 @@
             -fx-font-size: 14;
             -fx-background-color: #FFF;
             -fx-border-radius: 6;
+            -fx-border-color: @border;
+            -fx-border-width: 1;
+            -fx-border-style: solid;
             -fx-text-filled: @textPrimary;
-            -fx-effect: dropshadow(three-pass-box, @textPrimary, 6, 0, 0, 0);
         }
         .combo-box {
-            .comb-custom(#FFF,@textPrimary,@textPrimaryLight)
+            .comb-custom(#FFF,@textPrimary,@textPrimaryLight,@border)
         }
         .check-box {
             -fx-background-color: rgba(0,0,0,0);
             -fx-padding: 4 0 4 0;
             .box {
                 -fx-background-color:#FFF;
-                -fx-effect: dropshadow(three-pass-box, @textPrimary, 6, 0, 0, 0);
+                -fx-border-radius: 6;
+                -fx-border-color: @border;
+                -fx-border-width: 1;
+                -fx-border-style: solid;
                 &:selected .mark  {
                     -fx-background-color:@textPrimaryLight;
                 }
@@ -197,25 +235,29 @@
         }
     }
 
-}
 
-.dialogView {
-
-    -fx-background-image: url(./dialogBg.png);
-    -fx-background-size: cover;
-
-    .button {
-        -fx-background-color: @textPrimary;
-        -fx-text-fill: #FFF;
-        &:hover {
-            -fx-background-color: @textPrimaryLight;
-            -fx-text-fill: #FFF;
+    .grid-view {
+        .grid-cell {
+            -fx-text-fill: @textPrimary;
+            -fx-font-size: 14;
+            -fx-background-color: transparent;
+            -fx-border-color: transparent;
+            -fx-border-width: 1;
+            -fx-border-radius: 4;
+            -fx-border-style: solid;
+            &:hover {
+                -fx-border-color: @textPrimaryLight;
+            }
         }
     }
 
     .table-view {
-        -fx-background-color: @background;
-        -fx-background-radius: 8px;
+
+        -fx-background-color: #FFF;
+        -fx-border-radius: 8;
+        -fx-border-width: 1;
+        -fx-border-color: @border;
+
         .column-header-background {
             -fx-background-color:  rgba(255,255,255,0);
             .filler {
@@ -224,8 +266,10 @@
             }
         }
         .column-header {
-            -fx-background-color:@border;
+            -fx-background-color:transparent;
             -fx-background-radius: 8;
+            -fx-border-color: @border;
+            -fx-border-width: 0 1 1 0;
             .label {
               -fx-effect:dropshadow(three-pass-box,#FFF,12,0,0,0);
               -fx-text-fill: @textPrimary;
@@ -242,13 +286,22 @@
                 -fx-border-style: solid;
                 -fx-border-color: @border;
                 &:hover {
-                    -fx-background-radius: 8;
                     -fx-background-color: @backgroundHover;
                 }
                 &:selected {
-                    -fx-background-radius: 8;
                     -fx-background-color: @textPrimaryLight;
                     -fx-fill: #FFF;
+                    .button {
+                        -fx-background-color: transparent;
+                        -fx-text-fill: #FFF;
+                    }
+                }
+                .button {
+                    -fx-background-color: transparent;
+                    -fx-text-fill: @textPrimary;
+                    &:hover {
+                        -fx-text-fill: @textPrimaryLight;
+                    }
                 }
             }
         }
@@ -256,26 +309,43 @@
 
 }
 
+.inset-view {
+    -fx-background-color: #FFF;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+}
+
 .searchView {
 
     -fx-background-color:rgba(0,0,0,0);
 
     .searchField {
+        -fx-font-family: "寒蝉半圆体";
         -fx-font-size: 24px;
-        -fx-background-color: rgba(255,215,242,0);
-        -fx-border-color:rgba(255,255,255,0);
-        -fx-prompt-text-fill: #FFF;
+        -fx-background-color: rgba(255,215,242,1);
+        -fx-background-radius: 28;
+        -fx-border-color:rgba(255,255,255,1);
+        -fx-border-width: 8;
+        -fx-border-radius: 28;
+        -fx-prompt-text-fill: #8E8E8E;
         .menu-item {
             -fx-font-size: 14px;
         }
     }
 
+    .search-toolbar {
+        -fx-background-color: rgba(255,255,255,1);
+        -fx-background-radius: 24;
+    }
+
     .searchSubView {
 
-        -fx-background-image: url(./search.png);
+        -fx-background-image: url(./search-view.png);
         -fx-background-size: cover;
-        -fx-background-radius: 8px;
         -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+
+        -fx-border-color: #FFF;
+        -fx-border-width: 12;
+        -fx-border-radius: 24 24 0 0;
 
         .filterBar {
             -fx-background-radius: 8px 8px 0 0;
@@ -300,10 +370,21 @@
                 -fx-border-style: solid;
                 -fx-border-color: linear-gradient(to right, @border,rgba(0,0,0,0));;
                 -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
-
                 -fx-background-color: rgba(0,0,0,0);
+                .label {
+                    -fx-text-fill: #FFF;
+                }
+                .search-file-name {
+                    -fx-font-family: "寒蝉半圆体";
+                    -fx-font-size: 18;
+                    -fx-font-weight: bold;
+                }
+                .search-file-path {
+                    -fx-font-family: "寒蝉半圆体";
+                    -fx-font-size: 14;
+                }
                 &:hover {
-                    -fx-background-color: linear-gradient(to right,#FFF 75%, rgba(0,0,0,0) 95%, #FFF 100%);
+                    -fx-background-color: rgba(0,0,0,0.4);
                     .button {
                         -fx-background-color: rgba(0,0,0,0);
                         -fx-text-fill: @textPrimaryLight;
@@ -315,7 +396,7 @@
                 &:selected {
                     -fx-text-fill:#FFF;
                     -fx-text-background-color: #FFF;
-                    -fx-background-color: linear-gradient(to right,@textPrimaryLight 60%, rgba(0,0,0,0) 80%, @textPrimaryLight 100%);
+                    -fx-background-color: rgba(0,0,0,0.4);
                     .button {
                         -fx-background-color: @textPrimary;
                         -fx-text-fill: #FFF;
@@ -328,8 +409,8 @@
         }
     }
 
-    .searchOutherPane {
-        -fx-background-image: url(./searchBg.png);
+    .search-overlay{
+        -fx-background-image: url(./search-overlay.png);
         -fx-background-size: cover;
     }
 
@@ -350,21 +431,3 @@
     }
 }
 
-.extensionView {
-
-    -fx-background-image: url(./dialogBg.png);
-    -fx-background-size: cover;
-
-    .grid-view {
-        .grid-cell {
-            -fx-background-color:rgba(255,255,255,0.6);
-            -fx-text-fill: @textPrimary;
-            -fx-font-size: 14;
-            &:hover {
-                -fx-background-color: #FFF;
-                -fx-effect: dropshadow(three-pass-box, #999, 11, 0.0, 0, 1);
-            }
-        }
-    }
-
-}

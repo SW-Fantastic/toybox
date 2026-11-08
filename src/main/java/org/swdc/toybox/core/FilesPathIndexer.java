@@ -80,64 +80,72 @@ public class FilesPathIndexer {
         Path filePath = file.toPath().toAbsolutePath().normalize();
 
         if (file.isDirectory()) {
-            Files.walkFileTree(filePath, new FileVisitor<>() {
-
-                private Stack<IndexResult> folderStack = new Stack<>();
-
-                private IndexResult currentDir;
-
-                @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    if (currentDir != null) {
-                        folderStack.push(currentDir);
-                    }
-                    currentDir = resolveByPath(reader,dir,attrs);
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if (currentDir == null){
-                        return FileVisitResult.TERMINATE;
-                    }
-                    if (attrs.isRegularFile()) {
-                        if (currentDir.getState() != IndexResult.State.NOT_CHANGED) {
-                            refreshReader();
-                            resolveByPath(reader,file,attrs);
-                            logger.info("index file : " + file.normalize());
-                        }
-                    }
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-                    if (exc instanceof AccessDeniedException) {
-                        logger.warn("failed to visit this path : " + file.normalize() + " Access Denied.");
-                    } else {
-                        logger.error("failed to visit this path: " + file, exc);
-                    }
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    if (!folderStack.empty()) {
-                        currentDir = folderStack.pop();
-                    }
-                    return FileVisitResult.CONTINUE;
-                }
-
-            });
-            Document document = null;
+            IndexResult indexResult = null;
             if (Files.exists(filePath)) {
                 BasicFileAttributeView view = Files.getFileAttributeView(filePath,BasicFileAttributeView.class);
-                document = resolveByPath(reader,filePath, view.readAttributes()).getDocument();
+                indexResult = resolveByPath(reader,filePath, view.readAttributes());
             } else {
-                document =  resolveByPath(reader,filePath, null).getDocument();
+                indexResult =  resolveByPath(reader,filePath, null);
             }
-            writer.commit();
-            return document;
+
+            if (indexResult.getState() == IndexResult.State.NOT_CHANGED) {
+                writer.commit();
+                return indexResult.getDocument();
+            } else {
+
+                Files.walkFileTree(filePath, new FileVisitor<>() {
+
+                    private Stack<IndexResult> folderStack = new Stack<>();
+
+                    private IndexResult currentDir;
+
+                    @Override
+                    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                        if (currentDir != null) {
+                            folderStack.push(currentDir);
+                        }
+                        currentDir = resolveByPath(reader,dir,attrs);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        if (currentDir == null){
+                            return FileVisitResult.TERMINATE;
+                        }
+                        if (attrs.isRegularFile()) {
+                            if (currentDir.getState() != IndexResult.State.NOT_CHANGED) {
+                                refreshReader();
+                                resolveByPath(reader,file,attrs);
+                                logger.info("index file : " + file.normalize());
+                            }
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                        if (exc instanceof AccessDeniedException) {
+                            logger.warn("failed to visit this path : " + file.normalize() + " Access Denied.");
+                        } else {
+                            logger.error("failed to visit this path: " + file, exc);
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        if (!folderStack.empty()) {
+                            currentDir = folderStack.pop();
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                });
+                writer.commit();
+                return indexResult.getDocument();
+            }
+
         } else {
             Document document = null;
             if (Files.exists(filePath)) {

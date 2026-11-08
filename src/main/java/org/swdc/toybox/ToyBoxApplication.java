@@ -2,7 +2,11 @@ package org.swdc.toybox;
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.contentobjects.jnotify.JNotify;
 import org.swdc.data.EMFProviderFactory;
 import org.swdc.dependency.DependencyContext;
@@ -14,8 +18,12 @@ import org.swdc.toybox.core.EMFProviderImpl;
 import org.swdc.toybox.core.NativeKeyTrigger;
 import org.swdc.toybox.core.NativeKeyUtils;
 import org.swdc.toybox.core.ext.BoxExtensionContext;
+import org.swdc.toybox.core.ext.JNotifyHandler;
 import org.swdc.toybox.extension.Extension;
+import org.swdc.toybox.extension.HostProvider;
+import org.swdc.toybox.extension.NotifyHandler;
 import org.swdc.toybox.views.ExtensionView;
+import org.swdc.toybox.views.HostWindow;
 import org.swdc.toybox.views.MainView;
 import org.swdc.toybox.views.TrayView;
 
@@ -94,7 +102,11 @@ public class ToyBoxApplication extends FXApplication {
 
     @Override
     public void onConfig(EnvironmentLoader loader) {
+
         loader.withProvider(EMFProviderImpl.class);
+        loader.withInstance(HostProvider.class, new HostProvider());
+        loader.withInstance(NotifyHandler.class, new JNotifyHandler());
+
     }
 
     @Override
@@ -128,19 +140,9 @@ public class ToyBoxApplication extends FXApplication {
         EMFProviderFactory factory = dependencyContext.getByClass(EMFProviderFactory.class);
         factory.create();
 
-        ApplicationConfig config = dependencyContext.getByClass(ApplicationConfig.class);
-        NativeKeyTrigger trigger = dependencyContext.getByClass(NativeKeyTrigger.class);
-        trigger.registerTrigger(
-                NativeKeyUtils.keyShortcutId(config.getClass(),"extensionKey"),
-                NativeKeyUtils.stringToKeyCode(config.getExtensionKey()), () -> Platform.runLater(() -> {
-                    ExtensionView view = dependencyContext.getByClass(ExtensionView.class);
-                    if(view.getStage().isShowing()) {
-                        view.getStage().toFront();
-                    } else {
-                        view.show();
-                    }
-                })
-        );
+        // 立即加载并创建host Window，该窗口是隐藏的，它的子窗口不会出现在任务栏中。
+        HostWindow window = dependencyContext.getByClass(HostWindow.class);
+        window.show();
 
         BoxExtensionContext extensionContext = context.getByClass(BoxExtensionContext.class);
         for (Extension extension: extensionContext.getExtensions()) {
@@ -149,6 +151,14 @@ public class ToyBoxApplication extends FXApplication {
 
         ResourceBundle bundle = resources.getResourceBundle();
         MainView mainView = dependencyContext.getByClass(MainView.class);
+
+        ApplicationConfig config = dependencyContext.getByClass(ApplicationConfig.class);
+        NativeKeyTrigger trigger = dependencyContext.getByClass(NativeKeyTrigger.class);
+
+        trigger.registerTrigger(
+                NativeKeyUtils.keyShortcutId(config.getClass(),"searchKey"),
+                NativeKeyUtils.stringToKeyCode(config.getSearchKey()), () -> Platform.runLater(mainView::resetAndShow)
+        );
 
         try {
 
@@ -162,7 +172,7 @@ public class ToyBoxApplication extends FXApplication {
                         TrayView trayView = dependencyContext.getByClass(TrayView.class);
                         trayView.show(e);
                     } else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() > 1) {
-                        mainView.show();
+                        Platform.runLater(mainView::show);
                     }
                 }
             });

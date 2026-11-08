@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="437.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.swdc.toybox.views.controllers.IndexFolderViewController">
+<BorderPane styleClass="inset-view" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.swdc.toybox.views.controllers.IndexFolderViewController">
    <center>
-      <BorderPane prefHeight="200.0" prefWidth="200.0" styleClass="dialogView" BorderPane.alignment="CENTER">
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <center>
-            <TableView fx:id="folderTableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <TableView fx:id="folderTableView" minHeight="280.0" minWidth="400.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="columnPath" prefWidth="75.0" text="%toybox.index-paths.path" />
                 <TableColumn fx:id="columnOp" maxWidth="84.0" prefWidth="84.0" text="%toybox.index-paths.manage" />

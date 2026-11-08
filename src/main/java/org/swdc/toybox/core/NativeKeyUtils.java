@@ -47,10 +47,16 @@ public class NativeKeyUtils {
      * @return keyCode数组
      */
     public static Integer[] stringToKeyCode(String data) {
-        return Stream.of(data.split(","))
-                .map(Integer::valueOf)
-                .collect(Collectors.toList())
-                .toArray(new Integer[0]);
+        String[] keys = data.split(",");
+        Integer[] result = new Integer[Math.max(2, keys.length)];
+        for (int i = 0; i < result.length; i++) {
+            if (keys.length <= i) {
+                result[i] = result[i - 1];
+                break;
+            }
+            result[i] = Integer.parseInt(keys[i].trim());
+        }
+        return result;
     }
 
     public static String keyCodeToString(int[] codes) {

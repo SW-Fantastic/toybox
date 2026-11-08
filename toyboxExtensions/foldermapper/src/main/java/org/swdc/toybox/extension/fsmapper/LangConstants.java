@@ -8,6 +8,8 @@ public interface LangConstants {
 
     String EXT_CONF_NAME = "toybox.ext.folder-mapping.conf-name";
 
+    String EXT_CONF_THEME = "toybox.ext.folder-mapping.conf-theme";
+
     String EXT_CHOOSER_TITLE = "toybox.ext.folder-mapping.folder-chooser-title";
 
     String EXT_ERROR = "toybox.ext.folder-mapping.error";

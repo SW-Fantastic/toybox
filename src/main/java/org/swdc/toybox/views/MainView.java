@@ -13,6 +13,7 @@ import org.swdc.dependency.DependencyContext;
 import org.swdc.fx.font.FontSize;
 import org.swdc.fx.font.Fontawsome5Service;
 import org.swdc.fx.view.AbstractSwingView;
+import org.swdc.fx.view.AbstractView;
 import org.swdc.fx.view.View;
 
 import javax.swing.*;
@@ -27,40 +28,38 @@ import java.util.Arrays;
         resizeable = false,
         windowStyle = StageStyle.TRANSPARENT
 )
-public class MainView extends AbstractSwingView {
+public class MainView extends AbstractView {
 
     @Inject
     private Fontawsome5Service fontawsome5Service;
 
+    @Inject
+    private HostWindow hostWindow;
+
     @PostConstruct
     public void initView(){
-        JFrame stage = getStage();
-        stage.setSize(new Dimension(1000,800));
-        stage.setMaximumSize(new Dimension(1000,800));
-        stage.setLocationRelativeTo(null);
-        stage.addWindowListener(new WindowAdapter() {
 
-            @Override
-            public void windowDeactivated(WindowEvent e) {
-                long activeFrames = Arrays.stream(JFrame.getWindows())
-                        .filter(java.awt.Window::isActive)
-                        .count();
-                boolean noStages = Stage.getWindows()
-                        .filtered(Window::isFocused)
-                        .isEmpty();
-                if (activeFrames == 0 && noStages) {
-                    hide();
-                }
-            }
-        });
+        Stage stage = getStage();
+        stage.initOwner(hostWindow.getStage());
+        stage.setWidth(1000);
+        stage.setHeight(800);
+        stage.setMaxHeight(800);
+        stage.setMaxWidth(1000);
 
         setIcon(findById("locations"),"folder");
         setIcon(findById("refresh"), "sync-alt");
         setIcon(findById("config"),"cog");
         setIcon(findById("pin"),"map-marker");
-        setIcon(findById("exts"),"cube");
+
     }
 
+    public void resetAndShow() {
+        this.hide();
+        Stage stage = getStage();
+        stage.setAlwaysOnTop(true);
+        stage.show();
+        stage.setAlwaysOnTop(isPinSelected());
+    }
 
     public void setIcon(ButtonBase labeled, String icon) {
         labeled.setFont(fontawsome5Service.getSolidFont(FontSize.MIDDLE_SMALL));
@@ -78,6 +77,5 @@ public class MainView extends AbstractSwingView {
         TextField searchField = findById("searchField");
         searchField.requestFocus();
     }
-
 
 }

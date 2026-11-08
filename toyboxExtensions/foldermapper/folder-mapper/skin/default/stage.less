@@ -1,0 +1,57 @@
+@textPrimary: #2E8A65;
+@textPrimaryLight:#37A475;
+
+.mapper-view-outher {
+    -fx-background-color: rgba(255, 255, 255, 0);
+}
+
+.mapper-view {
+
+    -fx-background-color: rgba(255, 255, 255, 1);
+    -fx-border-color: #CECECE;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 11, 0.0, 0, 3);
+
+    .title-bar {
+        -fx-border-color: #CECECE;
+        -fx-border-width: 0 0 1 0;
+        .toggle-button,.button {
+          -fx-background-color: rgba(0, 0, 0, 0);
+          -fx-border-color: rgba(0, 0, 0, 0);
+          -fx-border-width: 1;
+          -fx-border-style: solid;
+          -fx-border-radius: 4;
+          &:hover {
+              -fx-border-color: #CECECE;
+          }
+        }
+    }
+
+    .list-view {
+        -fx-background-color: rgba(0,0,0,0);
+        .list-cell {
+            -fx-text-background-color: #000;
+            -fx-text-fill: @textPrimary;
+            -fx-background-color: #FFF;
+            &:selected{
+                -fx-background-color: @textPrimaryLight;
+                .label {
+                    -fx-text-fill: #FFF;
+                }
+            }
+        }
+        .scroll-bar {
+            -fx-font-size: 8;
+            -fx-background-color: rgba(255,255,255,0.2);
+            .track {
+                -fx-background-color: rgba(255,255,255,0.2);
+            }
+            .thumb {
+                -fx-background-color: @textPrimaryLight;
+            }
+        }
+    }
+
+}
+

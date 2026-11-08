@@ -8,13 +8,13 @@ import javafx.scene.control.TableRow;
 import javafx.scene.layout.HBox;
 import org.swdc.fx.font.FontSize;
 import org.swdc.fx.font.Fontawsome5Service;
-import org.swdc.toybox.extension.fsmapper.entity.MappedFile;
-import org.swdc.toybox.extension.fsmapper.entity.MappedFolderService;
+import org.swdc.toybox.extension.fsmapper.entity.MappedFolder;
+import org.swdc.toybox.extension.fsmapper.service.MappedFolderService;
 
 import java.io.File;
 import java.util.function.Consumer;
 
-public class ControlTableCell extends TableCell<MappedFile,MappedFile> {
+public class ControlTableCell extends TableCell<MappedFolder, MappedFolder> {
 
     private MappedFolderService folderService;
 
@@ -31,7 +31,7 @@ public class ControlTableCell extends TableCell<MappedFile,MappedFile> {
     }
 
     @Override
-    protected void updateItem(MappedFile mappedFile, boolean empty) {
+    protected void updateItem(MappedFolder mappedFile, boolean empty) {
         super.updateItem(mappedFile, empty);
         if (empty) {
             setGraphic(null);
@@ -44,11 +44,11 @@ public class ControlTableCell extends TableCell<MappedFile,MappedFile> {
             remove.setPadding(new Insets(2));
             remove.setText(fontawsome5Service.getFontIcon("trash"));
             remove.setOnAction(e -> {
-                TableRow<MappedFile> fileTableRow = getTableRow();
+                TableRow<MappedFolder> fileTableRow = getTableRow();
                 if (fileTableRow.isEmpty()) {
                     return;
                 }
-                MappedFile file = fileTableRow.getItem();
+                MappedFolder file = fileTableRow.getItem();
                 folderService.remove(new File(
                         file.getPath()
                 ));

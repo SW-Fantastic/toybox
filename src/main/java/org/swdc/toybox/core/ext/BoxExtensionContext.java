@@ -10,6 +10,7 @@ import org.swdc.fx.FXResources;
 import org.swdc.toybox.ToyBoxApplication;
 import org.swdc.toybox.extension.Extension;
 import org.swdc.toybox.extension.ExtensionContext;
+import org.swdc.toybox.views.HostWindow;
 
 import java.io.IOException;
 import java.lang.module.Configuration;
@@ -31,9 +32,12 @@ public class BoxExtensionContext implements ExtensionContext {
 
     private DependencyContext context;
 
+    private HostWindow hostWindow;
+
     @Inject
-    public BoxExtensionContext(ToyBoxApplication application, FXResources resources) {
+    public BoxExtensionContext(ToyBoxApplication application, FXResources resources, HostWindow window) {
         context = application.getContext();
+        hostWindow = window;
         Path extension = resources.getAssetsFolder().toPath().resolve("extension");
         if (!Files.exists(extension)) {
             try {
@@ -56,6 +60,7 @@ public class BoxExtensionContext implements ExtensionContext {
     }
 
     private void doLoadLayer(Path extension){
+
         ModuleFinder moduleFinder = ModuleFinder.of(extension);
         List<String> moduleName = moduleFinder.findAll().stream()
                 .map(ModuleReference::descriptor)

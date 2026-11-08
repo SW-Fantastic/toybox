@@ -6,10 +6,10 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import org.swdc.toybox.extension.fsmapper.entity.MappedFile;
-import org.swdc.toybox.extension.fsmapper.entity.MappedFolderService;
+import org.swdc.toybox.extension.fsmapper.entity.MappedFolder;
+import org.swdc.toybox.extension.fsmapper.service.MappedFolderService;
 
-public class CheckedTableCell extends TableCell<MappedFile,MappedFile> {
+public class CheckedTableCell extends TableCell<MappedFolder,MappedFolder> {
 
     private CheckBox checkBox;
 
@@ -22,7 +22,7 @@ public class CheckedTableCell extends TableCell<MappedFile,MappedFile> {
     }
 
     @Override
-    protected void updateItem(MappedFile item, boolean isEmpty) {
+    protected void updateItem(MappedFolder item, boolean isEmpty) {
         super.updateItem(item, isEmpty);
         if (isEmpty) {
             setGraphic(null);
@@ -34,11 +34,11 @@ public class CheckedTableCell extends TableCell<MappedFile,MappedFile> {
             checkBox = new CheckBox();
             checkBox.setSelected(getTableRow().getItem().isVisible());
             checkBox.selectedProperty().addListener(v -> {
-                TableRow<MappedFile> row = getTableRow();
+                TableRow<MappedFolder> row = getTableRow();
                 if (row == null || row.isEmpty()) {
                     return;
                 }
-                MappedFile file = row.getItem();
+                MappedFolder file = row.getItem();
                 if (file == null) {
                     return;
                 }

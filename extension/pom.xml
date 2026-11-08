@@ -24,6 +24,7 @@
             <groupId>org.swdc</groupId>
             <artifactId>swdata</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.swdc</groupId>

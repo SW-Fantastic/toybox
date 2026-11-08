@@ -42,7 +42,7 @@ public class ApplicationConfig extends org.swdc.fx.config.ApplicationConfig {
 
     @Property("searchKey")
     @PropEditor(
-            editor = SingleKeyboardPropertyEditor.class,
+            editor = MultipleKeyboardPropertyEditor.class,
             name = "%toybox.conf.search-shortcuts",
             description = "%toybox.conf.search-shortcuts-desc"
     )

@@ -10,8 +10,8 @@ import javafx.stage.DirectoryChooser;
 import org.swdc.fx.font.Fontawsome5Service;
 import org.swdc.fx.view.ViewController;
 import org.swdc.toybox.extension.fsmapper.LangConstants;
-import org.swdc.toybox.extension.fsmapper.entity.MappedFile;
-import org.swdc.toybox.extension.fsmapper.entity.MappedFolderService;
+import org.swdc.toybox.extension.fsmapper.entity.MappedFolder;
+import org.swdc.toybox.extension.fsmapper.service.MappedFolderService;
 
 import java.io.File;
 import java.net.URL;
@@ -26,16 +26,16 @@ public class ExtensionConfViewController extends ViewController<ExtensionConfVie
     private Fontawsome5Service fontawsome5Service;
 
     @FXML
-    private TableColumn<MappedFile,String> colPath;
+    private TableColumn<MappedFolder,String> colPath;
 
     @FXML
-    private TableColumn<MappedFile,MappedFile> colControl;
+    private TableColumn<MappedFolder,MappedFolder> colControl;
 
     @FXML
-    private TableColumn<MappedFile,MappedFile> colVisible;
+    private TableColumn<MappedFolder,MappedFolder> colVisible;
 
     @FXML
-    private TableView<MappedFile> tableView;
+    private TableView<MappedFolder> tableView;
 
     private ResourceBundle bundle;
 
@@ -46,13 +46,13 @@ public class ExtensionConfViewController extends ViewController<ExtensionConfVie
         colVisible.setCellFactory(c -> new CheckedTableCell(folderService));
         colControl.setCellFactory(c -> new ControlTableCell(folderService,fontawsome5Service, v-> {
 
-            ObservableList<MappedFile> files = tableView.getItems();
+            ObservableList<MappedFolder> files = tableView.getItems();
             files.clear();
             files.addAll(folderService.getAllFolders());
 
         }));
 
-        ObservableList<MappedFile> files = tableView.getItems();
+        ObservableList<MappedFolder> files = tableView.getItems();
         files.clear();
         files.addAll(folderService.getAllFolders());
     }
@@ -67,7 +67,7 @@ public class ExtensionConfViewController extends ViewController<ExtensionConfVie
             return;
         }
         folderService.add(target);
-        ObservableList<MappedFile> files = tableView.getItems();
+        ObservableList<MappedFolder> files = tableView.getItems();
         files.clear();
         files.addAll(folderService.getAllFolders());
     }

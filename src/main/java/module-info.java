@@ -16,7 +16,7 @@ module toybox {
 
     requires jakarta.annotation;
     requires jakarta.inject;
-    requires java.persistence;
+    requires jakarta.persistence;
 
     requires org.apache.lucene.core;
     requires org.apache.lucene.queries;

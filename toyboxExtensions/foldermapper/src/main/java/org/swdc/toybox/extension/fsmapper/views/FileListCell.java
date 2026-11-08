@@ -5,13 +5,17 @@ import javafx.geometry.Pos;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import org.swdc.fx.font.FontSize;
 import org.swdc.fx.font.Fontawsome5Service;
+import org.swdc.toybox.extension.fsmapper.FileViewUtil;
 
 import java.io.File;
 import java.net.URI;
@@ -20,8 +24,13 @@ import java.util.*;
 
 public class FileListCell extends ListCell<File> {
 
+    private static final TextIconMap textIconMap = new TextIconMap();
+
     private Label icon;
 
+    private ImageView iconView;
+
+    private BorderPane iconWrapper;
 
     private Label text;
 
@@ -29,77 +38,10 @@ public class FileListCell extends ListCell<File> {
 
     private Fontawsome5Service fontawsome5Service;
 
-    private Map<String,String> iconsMap = new HashMap<>();
 
     public FileListCell(Fontawsome5Service fontawsome5Service) {
 
         this.fontawsome5Service = fontawsome5Service;
-        iconsMap.put("unknown","question");
-        iconsMap.put("folder", "folder");
-        iconsMap.put("txt","file-alt");
-
-        iconsMap.put("zip","file-archive");
-        iconsMap.put("7z","file-archive");
-        iconsMap.put("rar","file-archive");
-        iconsMap.put("tar","file-archive");
-        iconsMap.put("gz","file-archive");
-        iconsMap.put("xz","file-archive");
-
-        iconsMap.put("png","image");
-        iconsMap.put("jpg","image");
-        iconsMap.put("jpeg","image");
-        iconsMap.put("bmp","image");
-        iconsMap.put("gif","image");
-        iconsMap.put("tiff","image");
-        iconsMap.put("svg","image");
-        iconsMap.put("ai","image");
-        iconsMap.put("webp","image");
-
-        iconsMap.put("xls","file-excel");
-        iconsMap.put("xlsx","file-excel");
-        iconsMap.put("doc","file-word");
-        iconsMap.put("docx","file-word");
-        iconsMap.put("pdf","file-pdf");
-
-        iconsMap.put("mp3","file-audio");
-        iconsMap.put("wma","file-audio");
-        iconsMap.put("wav","file-audio");
-        iconsMap.put("m4a","file-audio");
-        iconsMap.put("ogg","file-audio");
-
-        iconsMap.put("mp4","film");
-        iconsMap.put("wmv","film");
-        iconsMap.put("mkv","film");
-        iconsMap.put("rmvb","film");
-
-        iconsMap.put("htm","html5");
-        iconsMap.put("html","html5");
-        iconsMap.put("xhtml","html5");
-
-        iconsMap.put("jar","coffee");
-        iconsMap.put("java","coffee");
-        iconsMap.put("class","coffee");
-
-        iconsMap.put("chm","book");
-        iconsMap.put("epub","book");
-        iconsMap.put("mobi","book");
-        iconsMap.put("awz3","book");
-
-        iconsMap.put("torrent","download");
-        iconsMap.put("url","link");
-        iconsMap.put("lnk","link");
-
-        iconsMap.put("exe","terminal");
-        iconsMap.put("bat","terminal");
-        iconsMap.put("cmd","terminal");
-        iconsMap.put("sh","terminal");
-        iconsMap.put("msi","terminal");
-
-        iconsMap.put("ini","cog");
-        iconsMap.put("inf","cog");
-        iconsMap.put("conf","cog");
-        iconsMap.put("properties","cog");
-        iconsMap.put("json","cog");
 
     }
 
@@ -116,14 +58,22 @@ public class FileListCell extends ListCell<File> {
             root.setAlignment(Pos.CENTER_LEFT);
             root.setPadding(new Insets(2,4,2,4));
 
+            iconWrapper = new BorderPane();
+
             icon = new Label();
             icon.setMinSize(24,24);
             icon.setFont(fontawsome5Service.getSolidFont(FontSize.VERY_SMALL));
 
+            iconView = new ImageView();
+            iconView.setFitHeight(24);
+            iconView.setFitWidth(24);
+            iconView.setPreserveRatio(true);
+            iconView.setSmooth(true);
+
             text = new Label();
             text.maxWidthProperty().bind(getListView().widthProperty().subtract(85));
             root.getChildren().addAll(
-                    icon,text
+                    iconWrapper,text
             );
 
             root.setSpacing(6);
@@ -156,13 +106,17 @@ public class FileListCell extends ListCell<File> {
             ext = "unknown";
         }
 
-        if (!iconsMap.containsKey(ext)) {
-            ext = "unknown";
+        Image iconImage = FileViewUtil.getImageIcon(item);
+        if (iconImage != null) {
+            iconView.setImage(iconImage);
+            iconWrapper.setCenter(iconView);
+        } else {
+            icon.setText(fontawsome5Service.getFontIcon(
+                    textIconMap.getIconName(ext))
+            );
+            iconWrapper.setCenter(icon);
         }
 
-        icon.setText(fontawsome5Service.getFontIcon(
-                iconsMap.get(ext))
-        );
         text.setText(item.getName());
         setGraphic(root);
 
